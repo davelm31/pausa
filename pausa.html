@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Pausa · Espacios de estudio cerca de tu universidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Public+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* ===== Pausa · sistema visual =====
+   Idea: cuaderno cuadriculado de ingeniería + ficha de préstamo de biblioteca.
+   Papel celeste muy claro con cuadrícula, tinta negra y celeste para lo seleccionado. */
+:root{
+  --paper:#F3F9FD; --grid:#DDEEF8; --card:#FFFFFF; --chip:#EAF5FB;
+  --ink:#0B0B0C; --ink-2:#2E343B; --muted:#58646F;
+  --primary:#0B0B0C; --on-primary:#FFFFFF;
+  --sky:#6FC8F2; --accent-ink:#0B6A9E;
+  --mark:#6FC8F2; --mark-soft:#DDF2FC; --on-mark:#0B0B0C;
+  --green:#0B6A9E; --green-soft:#E1F3FC; --red:#B3261E; --red-soft:#FBE3E1;
+  --line:#CBE0EC; --rule:#BDE0F3; --margin:#8FD3F5; --stamp:#0B6A9E;
+  --m-land:#EEF5F8; --m-sea:#BFE4F5; --m-park:#DCEFE3; --m-st:#FFFFFF; --m-st2:#F6FAFC;
+  color-scheme:light;
+  --serif:'Literata','Iowan Old Style','Palatino Linotype',Georgia,serif;
+  --sans:'Public Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.45;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent-ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:6px}
+.ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+
+/* ===== Estructura ===== */
+.app{max-width:480px;margin:0 auto;min-height:100dvh;padding:0 16px 130px;
+  padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+@media (min-width:520px){ .app{background:var(--paper);background-image:inherit;box-shadow:0 0 0 1px var(--line)} }
+header.top{display:flex;align-items:center;gap:10px;padding:calc(14px + env(safe-area-inset-top,0px)) 0 8px}
+.brand{display:flex;align-items:center;gap:9px;border:0;background:none;padding:0;color:var(--ink);
+  font-family:var(--serif);font-weight:700;font-size:26px;letter-spacing:-.015em}
+.brand svg{width:32px;height:32px;display:block}
+.campus{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--ink-2);
+  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px}
+main:focus,main:focus-visible{outline:0}
+.screen{animation:in .16s ease-out}
+@keyframes in{from{opacity:.3}to{opacity:1}}
+
+h1.display{font-family:var(--serif);font-weight:600;font-size:29px;line-height:1.14;letter-spacing:-.018em;margin:14px 0 8px;text-wrap:balance}
+h1.title{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.15;letter-spacing:-.015em;margin:6px 0 6px;text-wrap:balance}
+h2.sec{font-family:var(--serif);font-weight:600;font-size:19px;margin:24px 0 10px;letter-spacing:-.01em}
+h3{margin:0}
+.lede{color:var(--ink-2);font-size:15.5px;line-height:1.55;margin:0 0 16px;max-width:44ch}
+.small{font-size:13px;color:var(--muted)}
+.cap{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--muted);margin:7px 2px 12px}
+.row{display:flex;align-items:center;gap:8px}
+.sp{height:12px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--ink-2)}
+.meta span{display:inline-flex;align-items:center;gap:5px}
+
+/* ===== Controles ===== */
+.seg{display:flex;gap:3px;padding:3px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+.seg button{flex:1;display:inline-flex;gap:6px;align-items:center;justify-content:center;border:0;background:none;
+  padding:9px 8px;border-radius:7px;font-weight:700;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary)}
+.seg.mark button[aria-pressed="true"]{background:var(--mark);color:var(--on-mark);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.seg.sm button{padding:9px 2px;font-size:13.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;border:1.5px solid var(--line);background:var(--card);
+  border-radius:999px;padding:8px 13px;font-size:13.5px;font-weight:600;min-height:38px}
+.chip[aria-pressed="true"]{background:var(--mark);border-color:var(--ink);color:var(--on-mark)}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--chip);color:var(--ink-2)}
+.tag.ok{background:var(--green-soft);color:var(--green)}
+.tag.warn{background:var(--ink);color:#fff}
+.tag.pend{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.tag.off{background:#E8EEF2;color:#46515B}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border:0;border-radius:10px;
+  padding:12px 16px;font-weight:700;font-size:15.5px;margin-top:12px;text-decoration:none}
+.btn.primary{background:var(--primary);color:var(--on-primary)}
+.btn.mark{background:var(--mark);color:var(--on-mark);box-shadow:0 2px 0 var(--ink)}
+.btn.line{background:var(--card);border:1.5px solid var(--line);color:var(--ink)}
+.btn.danger{background:transparent;border:1.5px solid var(--red);color:var(--red)}
+.btn.sm{min-height:40px;font-size:14px;padding:8px 12px;margin-top:8px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-row{display:flex;gap:8px}
+.btn-row .btn{margin-top:12px}
+.back{display:inline-flex;align-items:center;gap:4px;border:0;background:none;color:var(--accent-ink);font-weight:700;padding:8px 0;min-height:40px}
+
+.field{display:block;margin-top:14px}
+.field>span{display:block;font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:5px}
+input[type=text],input[type=time],input[type=number],select,textarea{width:100%;border:1.5px solid var(--line);background:var(--card);
+  border-radius:8px;padding:11px 12px;font-size:16px;min-height:46px}
+textarea{min-height:76px;resize:vertical}
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:10px;background:var(--card)}
+.stepper button{width:44px;height:44px;border:0;background:none;display:grid;place-items:center;font-size:18px;color:var(--accent-ink)}
+.stepper button[disabled]{opacity:.35}
+.stepper output{min-width:42px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+
+.opt{display:flex;gap:12px;align-items:center;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--card);
+  border-radius:10px;padding:12px;margin-bottom:8px}
+.opt .oi{width:40px;height:40px;border-radius:8px;background:var(--chip);display:grid;place-items:center;font-size:20px;flex:none}
+.opt b{display:block;font-size:15px}
+.opt small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
+.opt .pr{margin-left:auto;text-align:right;font-weight:800;font-size:14px;white-space:nowrap}
+.opt .pr small{font-weight:500}
+.opt[aria-pressed="true"]{border-color:var(--ink);background:var(--mark-soft);box-shadow:0 0 0 1px var(--ink)}
+.opt[aria-pressed="true"] .oi{background:var(--mark);color:var(--on-mark)}
+
+.days{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot{border:1.5px solid var(--line);background:var(--card);border-radius:8px;padding:9px 0 8px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+.slot small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:1px}
+.slot[aria-pressed="true"]{background:var(--mark);border-color:var(--ink);color:var(--on-mark)}
+.slot[aria-pressed="true"] small{color:var(--on-mark)}
+.slot[disabled]{background:transparent;color:var(--muted);cursor:not-allowed}
+.slot[disabled] b{text-decoration:line-through}
+.slot.wide{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px}
+.slot.wide small{margin:0}
+
+/* ===== Tarjetas de espacio (fichas de catálogo) ===== */
+.cards{display:flex;flex-direction:column;gap:10px}
+.scard{display:block;width:100%;text-align:left;position:relative;background:var(--card);border:1px solid var(--line);
+  border-left:5px solid var(--green);border-radius:6px;padding:13px 14px 12px;box-shadow:0 1px 0 var(--line)}
+.scard.low{border-left-color:var(--ink)}
+.scard.off{border-left-color:#B7C5CF}
+.scard .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.scard h3{font-family:var(--serif);font-weight:600;font-size:18.5px;line-height:1.2;letter-spacing:-.01em}
+.scard .meta{margin-top:6px}
+.scard .go{position:absolute;right:10px;top:50%;color:var(--muted);display:none}
+.scard .modes{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.amrow{display:flex;gap:11px;margin-top:9px;color:var(--ink-2);font-size:17px}
+.scard .btn{margin-top:10px}
+
+.map{position:relative;z-index:0;height:340px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--m-land)}
+.map.small{height:230px}
+.map-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink-2);margin:10px 2px 12px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.legend .g{background:var(--sky);box-shadow:0 0 0 1px var(--ink-2)} .legend .y{background:var(--ink)} .legend .n{background:#C9D3DB;box-shadow:0 0 0 1px var(--ink-2)}
+.leaflet-container{font-family:var(--sans);background:var(--m-land)}
+.pin{position:relative;min-width:34px;height:30px;padding:0 8px;border-radius:8px;display:grid;place-items:center;
+  font:800 14px var(--sans);color:#fff;background:var(--pc,var(--sky));border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.pin::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-6px;border:6px solid transparent;border-top-color:var(--pc,var(--sky));border-bottom:0}
+.pin.ok{--pc:#6FC8F2;color:#0B0B0C} .pin.low{--pc:#0B0B0C;color:#fff} .pin.off{--pc:#C9D3DB;color:#0B0B0C}
+.pin.sel{transform:scale(1.22);transform-origin:50% 100%;box-shadow:0 0 0 3px #0B0B0C,0 4px 10px rgba(0,0,0,.35)}
+.pin.pick{--pc:#0B6A9E;color:#fff;width:34px;padding:0;font-size:18px}
+.utec{display:flex;align-items:center;gap:5px;pointer-events:none}
+.utec i{width:20px;height:20px;border-radius:50%;background:#0B0B0C;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.4);flex:none}
+.utec b{display:inline-flex;align-items:center;gap:4px;background:#0B0B0C;color:#fff;border-radius:6px;padding:3px 7px;font:800 12px var(--sans);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.svgmap{display:block;width:100%;height:100%}
+.svgmap .m-land{fill:var(--m-land)} .svgmap .m-sea{fill:var(--m-sea)} .svgmap .m-park{fill:var(--m-park)}
+.svgmap .m-st{stroke:var(--m-st);fill:none;stroke-linecap:round} .svgmap .m-st2{stroke:var(--m-st2);fill:none}
+.svgmap .m-hw{stroke:#F0CDB0;fill:none;stroke-linecap:round}
+.svgmap .m-ring{fill:none;stroke:var(--accent-ink);stroke-dasharray:3 5;opacity:.55}
+.svgmap text{font-family:var(--sans);fill:var(--muted)}
+.svgpin{cursor:pointer}
+.svgpin .bd{fill:var(--pc);stroke:#fff;stroke-width:2}
+.svgpin text{fill:#0B0B0C;font-weight:800;font-size:13px;text-anchor:middle}
+.svgpin.ok{--pc:#6FC8F2} .svgpin.low{--pc:#0B0B0C} .svgpin.low text{fill:#fff} .svgpin.off{--pc:#C9D3DB} .svgpin.sel .bd{stroke:#0B0B0C;stroke-width:3.5}
+
+/* ===== Detalle de espacio y zonas ===== */
+.zone{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px;margin-bottom:12px;box-shadow:0 1px 0 var(--line)}
+.zone .zh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.zone h3{font-family:var(--serif);font-weight:600;font-size:18px;margin:8px 0 4px}
+.zone .ideal{margin:0 0 10px;color:var(--ink-2);font-size:14.5px}
+.amlist{list-style:none;margin:0 0 10px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.amlist li{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;line-height:1.3}
+.amlist li .ic{margin-top:1px;color:var(--accent-ink)}
+.amlist small{display:block;color:var(--muted);font-size:12px}
+.noise{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-bottom:10px}
+.dots i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--line);margin-right:3px}
+.dots i.on{background:var(--accent-ink)}
+.priceline{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:2px}
+.rules{list-style:none;margin:0;padding:0}
+.rules li{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
+.rules li .ic{color:var(--accent-ink);margin-top:2px}
+.note{font-size:12.5px;color:var(--muted);margin:22px 0 4px}
+.banner{display:flex;gap:12px;align-items:center;background:var(--mark-soft);border:1.5px solid var(--ink);border-radius:8px;padding:11px 12px;margin:6px 0 6px;width:100%;text-align:left}
+.banner .ic{font-size:22px;flex:none}
+.banner b{display:block;font-size:14.5px}
+.banner span{font-size:13px;color:var(--ink-2)}
+.empty{text-align:center;color:var(--ink-2);background:var(--card);border:1.5px dashed var(--line);border-radius:8px;padding:30px 16px;margin-top:10px}
+.empty .ic{font-size:30px;color:var(--muted)}
+.empty p{margin:8px 0 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:11px 10px}
+.stat b{display:block;font-family:var(--serif);font-size:24px;line-height:1.1}
+.stat span{font-size:12px;color:var(--muted)}
+
+/* ===== Ficha de reserva (préstamo de biblioteca) ===== */
+.ficha{position:relative;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:14px 14px 14px 36px;margin-bottom:14px;box-shadow:0 1px 0 var(--line),0 4px 0 -1px var(--card),0 5px 0 -1px var(--line)}
+.ficha::before{content:"";position:absolute;left:24px;top:0;bottom:0;width:1.5px;background:var(--margin)}
+.ficha::after{content:"";position:absolute;left:6px;top:16px;width:11px;height:11px;border-radius:50%;background:var(--paper);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.ficha .fh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px;color:var(--muted)}
+.ficha .sig{font-weight:800;color:var(--ink);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.ficha h3{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.2;margin:6px 0 2px}
+.fr{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
+.fr span:first-child{color:var(--muted)}
+.fr span:last-child{font-weight:700;text-align:right}
+.stamps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.stampbox{min-height:84px;border:1.5px dashed var(--rule);border-radius:6px;padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:4px}
+.stampbox .t{font-size:12px;font-weight:700;color:var(--muted);align-self:flex-start}
+.stampbox .blank{width:100%;border-bottom:1.5px solid var(--rule);height:28px}
+.stamp{display:inline-flex;flex-direction:column;align-items:center;line-height:1.05;border:2.5px solid var(--stamp);color:var(--stamp);border-radius:6px;padding:4px 10px;
+  font:800 15px var(--serif);letter-spacing:.07em;text-transform:uppercase;transform:rotate(-5deg);opacity:.94}
+.stamp.out{transform:rotate(4deg)}
+.stamp small{font:700 17px var(--sans);letter-spacing:.02em;text-transform:none;font-variant-numeric:tabular-nums}
+.stamp.new{animation:stamp .55s cubic-bezier(.2,1.5,.35,1) both}
+@keyframes stamp{0%{transform:scale(2.4) rotate(-14deg);opacity:0}55%{opacity:1}100%{transform:scale(1) rotate(-5deg);opacity:.94}}
+.stamp.out.new{animation-name:stampout}
+@keyframes stampout{0%{transform:scale(2.4) rotate(12deg);opacity:0}55%{opacity:1}100%{transform:scale(1) rotate(4deg);opacity:.94}}
+.status{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:800}
+.status.confirmed{color:var(--accent-ink)} .status.active{color:var(--green)} .status.done{color:var(--muted)} .status.cancelled,.status.noshow{color:var(--red)}
+.stars{display:flex;gap:4px;justify-content:center;margin:8px 0}
+.stars button{border:0;background:none;font-size:30px;color:var(--line);padding:2px}
+.stars button[aria-pressed="true"]{color:var(--accent-ink)}
+.result{text-align:center;padding:18px 0 4px}
+.result .big{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;font-size:30px}
+.result .big.ok{background:var(--green-soft);color:var(--green)}
+.result .big.warn{background:var(--mark-soft);color:var(--ink)}
+.result .big.off{background:var(--red-soft);color:var(--red)}
+
+/* ===== Escáner y QR ===== */
+.viewfinder{position:relative;aspect-ratio:1/1;max-height:360px;margin:6px auto 0;border-radius:10px;overflow:hidden;background:#0B0B0C;display:grid;place-items:center;color:#cfd9e4;text-align:center}
+.viewfinder video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.viewfinder .frame{position:absolute;inset:16%;border:3px solid var(--mark);border-radius:14px;box-shadow:0 0 0 999px rgba(5,12,20,.45)}
+.viewfinder .msg{position:relative;padding:20px;font-size:14px;max-width:30ch}
+.viewfinder .msg .ic{font-size:34px;display:block;margin:0 auto 8px;color:var(--mark)}
+.qrcard{background:#fff;color:#0B0B0C;border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center;margin-top:12px}
+.qrcard canvas{width:min(100%,260px);height:auto;aspect-ratio:1/1;image-rendering:pixelated}
+.qrcard .code{font-family:var(--serif);font-weight:700;font-size:22px;letter-spacing:.1em;margin-top:6px}
+.qrcard h3{font-family:var(--serif);font-weight:600;font-size:18px;margin-bottom:8px}
+.qrcard p{margin:6px 0 0;color:#2E343B;font-size:13.5px}
+
+/* ===== Navegación, hojas, avisos ===== */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .in{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);align-items:end}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;color:var(--muted);font-size:11.5px;font-weight:700;padding:10px 0 9px;min-height:56px}
+nav.tabs button .ic{font-size:21px}
+nav.tabs button[aria-current="page"]{color:var(--ink)}
+nav.tabs button[aria-current="page"] .ic{stroke-width:2.4}
+nav.tabs .fab{align-self:start;justify-self:center;width:62px;height:62px;min-height:0;margin-top:-22px;padding:0;border-radius:50%;background:var(--mark);color:var(--on-mark);
+  border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--ink),0 3px 0 1.5px var(--ink);justify-content:center}
+nav.tabs .fab .ic{font-size:26px}
+nav.tabs .fab[aria-current="page"]{color:var(--on-mark)}
+body[data-route="book"] nav.tabs,body[data-route="wizard"] nav.tabs{display:none}
+.cta-bar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.cta-bar .in{max-width:480px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.cta-bar .tot{flex:none}
+.cta-bar .tot small{display:block;color:var(--muted);font-size:12px}
+.cta-bar .tot b{font-family:var(--serif);font-size:22px}
+.cta-bar .btn{margin:0}
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(8,17,28,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:min(100%,480px);max-height:90dvh;overflow:auto;background:var(--card);border-radius:16px 16px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+.sheet h2{font-family:var(--serif);font-weight:600;font-size:22px;margin:0 0 4px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(10px);z-index:60;max-width:min(92vw,440px);background:var(--ink);color:var(--paper);
+  padding:11px 16px;border-radius:10px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.progress{display:flex;gap:6px;margin:8px 0 4px}
+.progress i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.progress i.on{background:var(--sky);box-shadow:inset 0 0 0 1px var(--ink)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:12px;text-align:left}
+.switch .tg{width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;flex:none}
+.switch .tg::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch[aria-pressed="true"] .tg{background:var(--green)}
+.switch[aria-pressed="true"] .tg::after{transform:translateX(18px)}
+.zlist{list-style:none;margin:0;padding:0}
+.zlist li{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px}
+.zlist small{display:block;color:var(--muted)}
+.iconbtn{border:0;background:none;color:var(--red);width:40px;height:40px;display:grid;place-items:center}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{counter-increment:s;display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--mark);color:var(--on-mark);display:grid;place-items:center;font-weight:800;font-size:13px}
+.steps b{display:block}
+.steps span{color:var(--ink-2);font-size:14px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media print{
+  body{background:#fff}
+  body *{visibility:hidden}
+  .printable,.printable *{visibility:visible}
+  .printable{position:absolute;left:0;top:0;width:100%;border:0}
+}
+</style>
+</head>
+<body>
+<div class="app" id="shell">
+  <header class="top">
+    <button class="brand" data-act="tab" data-to="explorar" aria-label="Pausa, ir al inicio">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="var(--primary)"/><rect x="10.5" y="8" width="7.5" height="24" rx="1.6" fill="var(--on-primary)"/><rect x="22" y="12" width="7.5" height="20" rx="1.6" fill="var(--mark)"/><rect x="8" y="33.5" width="24" height="2" rx="1" fill="var(--on-primary)" opacity=".55"/></svg>
+      Pausa
+    </button>
+    <span class="campus" id="campus"></span>
+  </header>
+  <main id="app" tabindex="-1" aria-live="polite"></main>
+</div>
+<nav class="tabs" id="tabs" aria-label="Principal"><div class="in" id="tabsIn"></div></nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="layer"></div>
+<script>
+'use strict';
+/* =====================================================================
+   PAUSA · prototipo (UTEC, Barranco, Lima)
+   Todo es de ejemplo: espacios, anfitriones, precios y disponibilidad.
+   ===================================================================== */
+
+/* ---------- utilidades ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => 'S/ ' + (Math.round(n * 100) / 100).toFixed(Math.round(n * 100) % 100 === 0 ? 0 : 2);
+function hash(str){ let h = 2166136261; for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+
+/* ---------- almacenamiento (localStorage con respaldo en memoria) ---------- */
+const mem = {};
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('pausa_' + k); if (v != null) return JSON.parse(v); }catch(e){} return k in mem ? JSON.parse(mem[k]) : d; },
+  set(k, v){ mem[k] = JSON.stringify(v); try{ localStorage.setItem('pausa_' + k, mem[k]); }catch(e){} },
+  clear(){ Object.keys(mem).forEach(k => delete mem[k]); try{ Object.keys(localStorage).filter(k => k.startsWith('pausa_')).forEach(k => localStorage.removeItem(k)); }catch(e){} }
+};
+const db = {
+  get res(){ return store.get('res', []); },   set res(v){ store.set('res', v); },
+  get mine(){ return store.get('mine', []); }, set mine(v){ store.set('mine', v); },
+  get log(){ return store.get('log', []); },   set log(v){ store.set('log', v); },
+  get user(){ return store.get('user', {name:''}); }, set user(v){ store.set('user', v); }
+};
+
+/* ---------- reloj (con modo demostración) ---------- */
+let clockOffset = 0;
+const now = () => new Date(Date.now() + clockOffset);
+const minsOf = d => d.getHours() * 60 + d.getMinutes();
+const dkey = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const hm = m => { m = Math.round(m); return String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); };
+const hmTs = ts => { const d = new Date(ts); return hm(d.getHours() * 60 + d.getMinutes()); };
+const dateMs = (key, min) => { const [y, m, d] = key.split('-').map(Number); return new Date(y, m - 1, d, 0, min).getTime(); };
+function addDays(n){ const d = now(); d.setDate(d.getDate() + n); return dkey(d); }
+function dayLabel(key){
+  if (key === addDays(0)) return 'Hoy';
+  if (key === addDays(1)) return 'Mañana';
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('es-PE', {weekday:'short', day:'numeric'}).replace('.', '');
+}
+function durTxt(m){ if (m < 60) return m + ' min'; const h = Math.floor(m / 60), r = m % 60; return r ? h + ' h ' + r : h + (h === 1 ? ' hora' : ' horas'); }
+function toMin(t){ const [h, m] = String(t || '0:0').split(':').map(Number); return h * 60 + (m || 0); }
+
+/* ---------- iconos (trazo, 24×24) ---------- */
+const ICONS = {
+  wifi:'<path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><path d="M12 20h.01"/>',
+  plug:'<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/>',
+  table:'<path d="M3 8h18v3H3z"/><path d="M6 11v8"/><path d="M18 11v8"/>',
+  puff:'<path d="M5 10a7 3.5 0 0 1 14 0 7 3.5 0 0 1-14 0z"/><path d="M5 10v6c0 1.9 3.1 3.5 7 3.5s7-1.6 7-3.5v-6"/>',
+  board:'<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8"/><path d="M12 16v4"/><path d="M7 12l3-3 3 2 4-4"/>',
+  screen:'<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8"/><path d="M12 16v4"/>',
+  ac:'<path d="M12 3v18"/><path d="M4.2 7.5l15.6 9"/><path d="M4.2 16.5l15.6-9"/>',
+  coffee:'<path d="M5 8h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M8 3v2"/><path d="M12 3v2"/>',
+  print:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/>',
+  book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  group:'<circle cx="12" cy="8" r="3"/><circle cx="5" cy="10" r="2.2"/><circle cx="19" cy="10" r="2.2"/><path d="M7 20v-1.5A4 4 0 0 1 11 14.5h2a4 4 0 0 1 4 4V20"/><path d="M1.5 19v-1a3 3 0 0 1 3-3"/><path d="M22.5 19v-1a3 3 0 0 0-3-3"/>',
+  headset:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><path d="M4 14h3v5H5.5A1.5 1.5 0 0 1 4 17.5z"/><path d="M20 14h-3v5h1.5a1.5 1.5 0 0 0 1.5-1.5z"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/>',
+  qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M20 14v.01"/><path d="M14 20h3"/><path d="M20 18v3"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="M3 10h18"/>',
+  building:'<path d="M4 21V6l8-3 8 3v15"/><path d="M2 21h20"/><path d="M9 21v-5h6v5"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9 13h.01"/><path d="M15 13h.01"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  chevL:'<path d="M15 18l-6-6 6-6"/>', chevR:'<path d="M9 18l6-6-6-6"/>',
+  x:'<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',
+  plus:'<path d="M12 5v14"/><path d="M5 12h14"/>', minus:'<path d="M5 12h14"/>',
+  list:'<path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/>',
+  map:'<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14"/><path d="M15 6v14"/>',
+  volume:'<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M22 9l-6 6"/><path d="M16 9l6 6"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+  login:'<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/>',
+  logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+  route:'<path d="M3 11l19-9-9 19-2-8z"/>',
+  copy:'<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M4 16V5a2 2 0 0 1 2-2h11"/>',
+  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4"/><path d="M15.4 6.5l-6.8 4"/>',
+  trash:'<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 15h10l1-15"/>',
+  cap:'<path d="M22 10L12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+  card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  phone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/>',
+  camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+  print_:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',
+  alert:'<path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  sparkle:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>'
+};
+const I = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+
+/* ---------- catálogos ---------- */
+const AM = {
+  wifi:{l:'Wi-Fi'}, plug:{l:'Enchufes'}, table:{l:'Mesas'}, puff:{l:'Puff'}, board:{l:'Pizarra'},
+  ac:{l:'Aire acondicionado'}, coffee:{l:'Café y snacks'}, screen:{l:'Pantalla'}, print:{l:'Impresora'}
+};
+const KINDS = {
+  estudio:{l:'Estudio en silencio', i:'book', d:'Concentración y lectura'},
+  equipo:{l:'Trabajo en equipo', i:'users', d:'Conversar y trabajar juntos'},
+  descanso:{l:'Puff y descanso', i:'puff', d:'Leer o relajarte entre clases'},
+  llamadas:{l:'Videollamadas', i:'headset', d:'Cabinas para hablar sin molestar'}
+};
+const MODES = {
+  ind:{l:'Individual', d:'Un puesto solo para ti', i:'user'},
+  comp:{l:'Compartida', d:'Un asiento en una mesa común', i:'users'},
+  grup:{l:'Grupal', d:'Mesa o sala para tu equipo (2 a 8)', i:'group'}
+};
+const NOISE = ['', 'Muy silencioso', 'Ambiente moderado', 'Se conversa'];
+const RULE_PRESETS = ['Silencio absoluto','Conversación en voz baja','Solo con carnet universitario','Sin comida en las zonas de estudio','Quitarse los zapatos al ingresar','Llamadas solo en cabinas','No se admiten mascotas','Avisar en portería al llegar'];
+const SPACE_KINDS = ['Cafetería','Departamento','Coworking','Sala comunal','Librería-café','Casa con jardín','Otro'];
+
+/* ---------- geografía: campus de UTEC en la entrada de Barranco ---------- */
+const UTEC = {lat:-12.1352, lng:-77.0214, name:'UTEC'};   // Jr. Medrano Silva 165, Barranco (ubicación del campus)
+const M_LAT = 111320, M_LNG = 111320 * Math.cos(UTEC.lat * Math.PI / 180);
+const off = (n, e) => ({lat: UTEC.lat + n / M_LAT, lng: UTEC.lng + e / M_LNG});
+function dist(a, b){
+  const R = 6371000, r = Math.PI / 180, dLa = (b.lat - a.lat) * r, dLo = (b.lng - a.lng) * r;
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const walkMin = s => Math.max(1, Math.round(dist(UTEC, s) / 80));
+const distTxt = s => { const d = dist(UTEC, s); return d < 1000 ? Math.round(d / 10) * 10 + ' m' : (d / 1000).toFixed(1) + ' km'; };
+
+/* ---------- espacios de ejemplo (ficticios) ---------- */
+const SEED = [
+ {id:'s01', name:'Café Tinta & Hoja', kind:'Cafetería', addr:'Dirección de ejemplo, Barranco', ...off(-200, 130), open:450, close:1320, verified:true, host:'Equipo Tinta & Hoja', maxDur:180,
+  about:'Cafetería de barrio con mesas junto al ventanal y una mesa larga para grupos.',
+  rules:['Conversación en voz baja','Consumo mínimo de S/ 6 por turno','Máximo 3 horas por turno'],
+  zones:[
+   {id:'z1', name:'Mesas del ventanal', kind:'estudio', cap:10, modes:['ind','comp'], price:{ind:3, comp:2}, noise:2, ideal:'Repasar apuntes o resolver problemas con luz natural y un café a la mano.',
+    am:{wifi:'80 Mbps', plug:'1 por cada 2 asientos', table:'Mesas para 2 personas', coffee:'Carta de café y snacks'}},
+   {id:'z2', name:'Mesa larga', kind:'equipo', cap:8, modes:['comp','grup'], price:{comp:2.5, grup:3}, noise:3, ideal:'Avanzar un informe grupal o ensayar una exposición.',
+    am:{wifi:'80 Mbps', plug:'Regletas sobre la mesa', table:'Mesa de 8 asientos', board:'Pizarra portátil', coffee:'Carta de café y snacks'}}]},
+ {id:'s02', name:'Depto. Los Jazmines', kind:'Departamento', addr:'Dirección de ejemplo, Barranco', ...off(-340, -150), open:540, close:1260, verified:true, host:'Rosa M.', maxDur:180,
+  about:'Comedor y sala de un departamento familiar abiertos a estudiantes. Ingreso por portería.',
+  rules:['Silencio en el comedor','Solo con carnet universitario','Sin comida pesada','Quitarse los zapatos en la sala de descanso'],
+  zones:[
+   {id:'z1', name:'Comedor silencioso', kind:'estudio', cap:4, modes:['ind','comp'], price:{ind:4, comp:3}, noise:1, ideal:'Prepararte para un examen sin ruido, como en casa.',
+    am:{wifi:'100 Mbps', plug:'Enchufe en cada puesto', table:'Mesa de comedor grande'}},
+   {id:'z2', name:'Sala con puff', kind:'descanso', cap:3, modes:['ind','comp'], price:{ind:3, comp:2}, noise:1, ideal:'Leer con calma o descansar entre clases.',
+    am:{wifi:'100 Mbps', plug:'Enchufes junto a los puff', puff:'4 puff y un sofá'}}]},
+ {id:'s03', name:'Terraza Verde Cowork', kind:'Coworking', addr:'Dirección de ejemplo, Barranco', ...off(-350, 170), open:480, close:1380, verified:true, host:'Terraza Verde S.A.C.', maxDur:240,
+  about:'Coworking con salón silencioso, mesas de equipo y cabinas para llamadas.',
+  rules:['Llamadas solo en cabinas','Ingreso con carnet universitario','Máximo 4 horas por turno'],
+  zones:[
+   {id:'z1', name:'Salón silencioso', kind:'estudio', cap:8, modes:['ind'], price:{ind:5}, noise:1, ideal:'Tesis o lectura larga en escritorios individuales.',
+    am:{wifi:'200 Mbps', plug:'Enchufe y lámpara por escritorio', table:'Escritorios individuales', ac:'Aire acondicionado', print:'Impresora (pago aparte)'}},
+   {id:'z2', name:'Mesas de trabajo', kind:'equipo', cap:12, modes:['comp','grup'], price:{comp:3.5, grup:4}, noise:3, ideal:'Proyectos en equipo con pizarra y pantalla compartida.',
+    am:{wifi:'200 Mbps', plug:'Regletas en cada mesa', table:'Mesas para 4 a 6', board:'Pizarra', screen:'Pantalla de 55"', ac:'Aire acondicionado'}},
+   {id:'z3', name:'Cabinas de llamadas', kind:'llamadas', cap:3, modes:['ind'], price:{ind:6}, noise:1, ideal:'Videollamadas, entrevistas o grabar una exposición.',
+    am:{wifi:'200 Mbps', plug:'Enchufes', table:'Escritorio pequeño', ac:'Aire acondicionado'}}]},
+ {id:'s04', name:'Casa Malecón, sala comunal', kind:'Sala comunal', addr:'Dirección de ejemplo, Barranco', ...off(-480, -260), open:600, close:1200, verified:true, host:'Asociación vecinal Malecón', maxDur:180,
+  about:'Sala vecinal con mesas plegables y un rincón de lectura con puff.',
+  rules:['Dejar la sala ordenada','Sin comidas calientes','Aforo máximo de 16 personas'],
+  zones:[
+   {id:'z1', name:'Sala grande', kind:'equipo', cap:10, modes:['comp','grup'], price:{comp:2, grup:2.5}, noise:3, ideal:'Ensayar una exposición o hacer un taller entre amigos.',
+    am:{wifi:'50 Mbps', plug:'Tomacorrientes en las paredes', table:'Mesas plegables', board:'Pizarra acrílica'}},
+   {id:'z2', name:'Rincón de lectura', kind:'descanso', cap:6, modes:['ind','comp'], price:{ind:2.5, comp:2}, noise:1, ideal:'Lectura tranquila sentado en puff.',
+    am:{wifi:'50 Mbps', plug:'2 tomacorrientes', puff:'6 puff'}}]},
+ {id:'s05', name:'Librería-café Marginalia', kind:'Librería-café', addr:'Dirección de ejemplo, Barranco', ...off(-330, 20), open:600, close:1290, verified:true, host:'Marginalia', maxDur:150,
+  about:'Librería con café, mezzanine silencioso y un salón de lectura con puff.',
+  rules:['Conversación en voz baja','Consumo mínimo de S/ 8 por turno','Máximo 2 horas y media por turno'],
+  zones:[
+   {id:'z1', name:'Mezzanine', kind:'estudio', cap:6, modes:['ind'], price:{ind:4}, noise:1, ideal:'Leer papers y escribir con calma.',
+    am:{wifi:'70 Mbps', plug:'Enchufe en cada puesto', table:'Escritorios altos', coffee:'Café y pastelería'}},
+   {id:'z2', name:'Salón con puff', kind:'descanso', cap:8, modes:['ind','comp'], price:{ind:3.5, comp:2.5}, noise:2, ideal:'Tomar notas o descansar un rato antes de clase.',
+    am:{wifi:'70 Mbps', plug:'Enchufes en las columnas', puff:'8 puff y sillones', coffee:'Café y pastelería'}}]},
+ {id:'s06', name:'Loft Domeyer', kind:'Departamento', addr:'Dirección de ejemplo, Barranco', ...off(-500, -80), open:480, close:1320, verified:true, host:'Andrés V.', maxDur:240,
+  about:'Loft con una mesa de equipo con pantalla y escritorios individuales.',
+  rules:['Ingreso con carnet universitario','Silencio después de las 20:00','No se puede fumar'],
+  zones:[
+   {id:'z1', name:'Mesa de equipo', kind:'equipo', cap:6, modes:['comp','grup'], price:{comp:3, grup:3.5}, noise:2, ideal:'Trabajos grupales con pantalla para proyectar.',
+    am:{wifi:'150 Mbps', plug:'Regleta en la mesa', table:'Mesa para 6', board:'Pizarra', screen:'Televisor con HDMI'}},
+   {id:'z2', name:'Escritorios', kind:'estudio', cap:4, modes:['ind'], price:{ind:4.5}, noise:1, ideal:'Programar o estudiar con monitor extra.',
+    am:{wifi:'150 Mbps', plug:'Enchufes', table:'Escritorio con silla ergonómica', ac:'Aire acondicionado'}}]},
+ {id:'s07', name:'Estudio Pedro de Osma', kind:'Coworking', addr:'Dirección de ejemplo, Barranco', ...off(-520, 90), open:540, close:1260, verified:true, host:'Estudio PO S.A.C.', maxDur:180,
+  about:'Sala de reuniones privada y una cabina para videollamadas.',
+  rules:['Reserva obligatoria','Cancelación gratuita hasta 30 min antes'],
+  zones:[
+   {id:'z1', name:'Sala de reuniones', kind:'equipo', cap:8, modes:['grup'], price:{grup:5}, noise:3, ideal:'Reunión de equipo en una sala privada con pantalla.',
+    am:{wifi:'200 Mbps', plug:'Enchufes', table:'Mesa de reuniones', board:'Pizarra de vidrio', screen:'Pantalla', ac:'Aire acondicionado'}},
+   {id:'z2', name:'Cabina Zoom', kind:'llamadas', cap:2, modes:['ind'], price:{ind:6}, noise:1, ideal:'Entrevista o sustentación virtual sin interrupciones.',
+    am:{wifi:'200 Mbps', plug:'Enchufes', table:'Escritorio', ac:'Aire acondicionado'}}]},
+ {id:'s08', name:'Pan & Página', kind:'Panadería-café', addr:'Dirección de ejemplo, Barranco', ...off(-640, -190), open:420, close:1260, verified:false, host:'Pan & Página', maxDur:120,
+  about:'Panadería con salón interior y patio con puff.',
+  rules:['Consumo mínimo de S/ 5 por turno','Máximo 2 horas por turno','Mascotas permitidas solo en el patio'],
+  zones:[
+   {id:'z1', name:'Salón interior', kind:'estudio', cap:12, modes:['ind','comp'], price:{ind:2.5, comp:1.5}, noise:2, ideal:'Estudiar con algo de movimiento alrededor.',
+    am:{wifi:'60 Mbps', plug:'Enchufes en la pared', table:'Mesas individuales y compartidas', coffee:'Panadería y café'}},
+   {id:'z2', name:'Patio con puff', kind:'descanso', cap:8, modes:['ind','comp'], price:{ind:2.5, comp:1.5}, noise:2, ideal:'Descansar al aire libre entre clases.',
+    am:{wifi:'60 Mbps', puff:'Puff y bancas', coffee:'Panadería y café'}}]},
+ {id:'s09', name:'Biblioteca vecinal Casa Barranco', kind:'Biblioteca vecinal', addr:'Dirección de ejemplo, Barranco', ...off(-180, -30), open:540, close:1140, verified:true, host:'Junta vecinal', maxDur:240,
+  about:'Biblioteca de barrio con sala de lectura y libros de consulta.',
+  rules:['Silencio absoluto','No se permiten alimentos','Dejar los libros en el carrito'],
+  zones:[
+   {id:'z1', name:'Sala de lectura', kind:'estudio', cap:14, modes:['ind','comp'], price:{ind:2, comp:1}, noise:1, ideal:'Estudiar en silencio con libros de consulta a mano.',
+    am:{wifi:'40 Mbps', plug:'Enchufes en mesas laterales', table:'Mesas largas'}}]}
+];
+SEED.forEach(s => s.zones.forEach(z => z.sid = s.id));
+const spaces = () => SEED.concat(db.mine);
+const spaceById = id => spaces().find(s => s.id === id);
+const zoneOf = (s, zid) => s.zones.find(z => z.id === zid);
+
+/* ---------- disponibilidad simulada ---------- */
+function taken(s, z, date, slot){
+  const r = (hash(s.id + z.id + date + slot) % 1000) / 1000, h = slot / 60;
+  const peak = (h >= 11 && h < 14) ? .95 : (h >= 15 && h < 20) ? .85 : .5;
+  return Math.min(z.cap, Math.floor(z.cap * r * peak * 1.05));
+}
+function userUnits(s, z, date, a, b){
+  return db.res.filter(r => r.sid === s.id && r.zid === z.id && r.date === date && (r.status === 'confirmed' || r.status === 'active') && r.start < b && r.start + r.dur > a)
+    .reduce((n, r) => n + r.people, 0);
+}
+function zoneFree(s, z, date, start, dur){
+  let m = z.cap;
+  for (let t = Math.floor(start / 30) * 30; t < start + dur; t += 30) m = Math.min(m, z.cap - taken(s, z, date, t) - userUnits(s, z, date, t, t + 30));
+  return Math.max(0, m);
+}
+function spaceNow(s, zf){
+  const d = now(), m = minsOf(d), date = dkey(d);
+  if (s.paused) return {state:'off', free:0, txt:'Pausado por el anfitrión'};
+  if (m < s.open) return {state:'off', free:0, txt:'Abre a las ' + hm(s.open)};
+  if (m >= s.close) return {state:'off', free:0, txt:'Cerrado'};
+  let free = 0; s.zones.forEach(z => { if (!zf || zf(z)) free += zoneFree(s, z, date, m, 30); });
+  if (free <= 0) return {state:'off', free:0, txt:'Sin cupo ahora'};
+  return {state: free <= 3 ? 'low' : 'ok', free, txt: free + (free === 1 ? ' libre ahora' : ' libres ahora')};
+}
+function openTxt(s){
+  const m = minsOf(now());
+  if (s.paused) return 'Pausado por el anfitrión';
+  if (m < s.open) return 'Cerrado, abre a las ' + hm(s.open);
+  if (m >= s.close) return 'Cerrado, abre mañana a las ' + hm(s.open);
+  return 'Abierto hasta las ' + hm(s.close);
+}
+
+/* ---------- reservas ---------- */
+const rStart = r => dateMs(r.date, r.start), rEnd = r => dateMs(r.date, r.start + r.dur);
+function syncRes(){
+  const list = db.res, t = now().getTime(); let ch = false;
+  list.forEach(r => { if (r.status === 'confirmed' && t > rEnd(r)){ r.status = 'noshow'; ch = true; } });
+  if (ch) db.res = list;
+  return list;
+}
+const STATUS = {confirmed:'Por llegar', active:'En curso', done:'Finalizada', cancelled:'Cancelada', noshow:'No asististe'};
+function currentRes(){
+  const t = now().getTime();
+  return syncRes().filter(r => r.status === 'active' || (r.status === 'confirmed' && rEnd(r) > t)).sort((a, b) => rStart(a) - rStart(b))[0] || null;
+}
+
+/* ---------- escaneo: lógica de entrada y salida ---------- */
+function parseLocal(raw){
+  let c = String(raw || '').trim();
+  const m = c.match(/^PAUSA[:|]LOCAL[:|](.+)$/i); if (m) c = m[1];
+  c = c.replace(/^PAUSA-/i, '').toLowerCase();
+  return spaces().find(s => s.id.toLowerCase() === c) || null;
+}
+const localCode = s => 'PAUSA-' + s.id.toUpperCase();
+function doScan(raw){
+  const s = parseLocal(raw);
+  if (!s) return {kind:'unknown'};
+  const list = syncRes().filter(r => r.sid === s.id), t = now().getTime();
+  const act = list.find(r => r.status === 'active');
+  if (act){
+    const all = db.res, r = all.find(x => x.id === act.id);
+    r.status = 'done'; r.outAt = t; db.res = all;
+    db.log = db.log.concat([{t, sid:s.id, rid:r.id, type:'out'}]);
+    return {kind:'out', rid:r.id};
+  }
+  const cand = list.filter(r => r.status === 'confirmed').sort((a, b) => rStart(a) - rStart(b));
+  const ok = cand.find(r => t >= rStart(r) - 15 * 60000 && t <= rEnd(r));
+  if (ok){
+    const all = db.res, r = all.find(x => x.id === ok.id);
+    r.status = 'active'; r.inAt = t; db.res = all;
+    db.log = db.log.concat([{t, sid:s.id, rid:r.id, type:'in'}]);
+    return {kind:'in', rid:r.id};
+  }
+  const next = cand.find(r => rStart(r) > t);
+  if (next) return {kind:'early', rid:next.id, sid:s.id};
+  return {kind:'none', sid:s.id};
+}
+
+/* ---------- generador de QR (versiones 1 a 4, corrección L) ---------- */
+const QR = (() => {
+  const SPEC = [null, {dc:19, ec:7}, {dc:34, ec:10}, {dc:55, ec:15}, {dc:80, ec:20}];
+  const mul = (x, y) => { let z = 0; for (let i = 7; i >= 0; i--){ z = (z << 1) ^ ((z >>> 7) * 0x11D); z ^= ((y >>> i) & 1) * x; } return z; };
+  function rsGen(deg){
+    const r = new Array(deg).fill(0); r[deg - 1] = 1; let root = 1;
+    for (let i = 0; i < deg; i++){ for (let j = 0; j < deg; j++){ r[j] = mul(r[j], root); if (j + 1 < deg) r[j] ^= r[j + 1]; } root = mul(root, 2); }
+    return r;
+  }
+  function rsRem(data, gen){
+    const r = new Array(gen.length).fill(0);
+    data.forEach(b => { const f = b ^ r.shift(); r.push(0); gen.forEach((c, i) => { r[i] ^= mul(c, f); }); });
+    return r;
+  }
+  function encode(text){
+    const bytes = Array.from(new TextEncoder().encode(text));
+    let v = 1; while (v <= 4 && bytes.length > SPEC[v].dc - 2) v++;
+    if (v > 4) throw new Error('Texto demasiado largo para el QR');
+    const {dc, ec} = SPEC[v], size = 17 + 4 * v;
+    const bits = []; const put = (val, len) => { for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1); };
+    put(4, 4); put(bytes.length, 8); bytes.forEach(b => put(b, 8));
+    put(0, Math.min(4, dc * 8 - bits.length)); while (bits.length % 8) bits.push(0);
+    for (let p = 0xEC; bits.length < dc * 8; p ^= 0xEC ^ 0x11) put(p, 8);
+    const data = []; for (let i = 0; i < bits.length; i += 8){ let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; data.push(b); }
+    const all = data.concat(rsRem(data, rsGen(ec)));
+
+    const mod = Array.from({length:size}, () => new Array(size).fill(false));
+    const fn = Array.from({length:size}, () => new Array(size).fill(false));
+    const setFn = (x, y, d) => { mod[y][x] = d; fn[y][x] = true; };
+    for (let i = 0; i < size; i++){ setFn(6, i, i % 2 === 0); setFn(i, 6, i % 2 === 0); }
+    const finder = (cx, cy) => { for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++){
+      const x = cx + dx, y = cy + dy; if (x < 0 || x >= size || y < 0 || y >= size) continue;
+      const d = Math.max(Math.abs(dx), Math.abs(dy)); setFn(x, y, d !== 2 && d !== 4); } };
+    finder(3, 3); finder(size - 4, 3); finder(3, size - 4);
+    if (v >= 2){ const c = size - 7; for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) setFn(c + dx, c + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1); }
+    const fmt = mask => {
+      const d = (1 << 3) | mask; let rem = d;
+      for (let i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+      const bs = ((d << 10) | rem) ^ 0x5412, g = i => ((bs >>> i) & 1) !== 0;
+      for (let i = 0; i <= 5; i++) setFn(8, i, g(i));
+      setFn(8, 7, g(6)); setFn(8, 8, g(7)); setFn(7, 8, g(8));
+      for (let i = 9; i < 15; i++) setFn(14 - i, 8, g(i));
+      for (let i = 0; i < 8; i++) setFn(size - 1 - i, 8, g(i));
+      for (let i = 8; i < 15; i++) setFn(8, size - 15 + i, g(i));
+      setFn(8, size - 8, true);
+    };
+    fmt(0);
+    let k = 0;
+    for (let right = size - 1; right >= 1; right -= 2){
+      if (right === 6) right = 5;
+      for (let vert = 0; vert < size; vert++) for (let j = 0; j < 2; j++){
+        const x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - vert : vert;
+        if (!fn[y][x] && k < all.length * 8){ mod[y][x] = ((all[k >>> 3] >>> (7 - (k & 7))) & 1) !== 0; k++; }
+      }
+    }
+    const MASKS = [(x,y)=>(x+y)%2===0, (x,y)=>y%2===0, (x,y)=>x%3===0, (x,y)=>(x+y)%3===0, (x,y)=>(Math.floor(x/3)+Math.floor(y/2))%2===0,
+      (x,y)=>x*y%2+x*y%3===0, (x,y)=>(x*y%2+x*y%3)%2===0, (x,y)=>((x+y)%2+x*y%3)%2===0];
+    const applyMask = m => { for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!fn[y][x] && MASKS[m](x, y)) mod[y][x] = !mod[y][x]; };
+    const penalty = () => {
+      let p = 0;
+      const line = a => { let run = 1; for (let i = 1; i <= a.length; i++){ if (i < a.length && a[i] === a[i-1]) run++; else { if (run >= 5) p += 3 + run - 5; run = 1; } }
+        const s = a.map(b => b ? '1' : '0').join(''); ['10111010000','00001011101'].forEach(pat => { let i = -1; while ((i = s.indexOf(pat, i + 1)) >= 0) p += 40; }); };
+      for (let y = 0; y < size; y++) line(mod[y]);
+      for (let x = 0; x < size; x++) line(mod.map(r => r[x]));
+      for (let y = 0; y < size - 1; y++) for (let x = 0; x < size - 1; x++){ const c = mod[y][x]; if (c === mod[y][x+1] && c === mod[y+1][x] && c === mod[y+1][x+1]) p += 3; }
+      let dark = 0; mod.forEach(r => r.forEach(c => { if (c) dark++; }));
+      p += Math.floor(Math.abs(dark * 20 - size * size * 10) / (size * size)) * 10;
+      return p;
+    };
+    let best = 0, bestP = Infinity;
+    for (let m = 0; m < 8; m++){ applyMask(m); fmt(m); const p = penalty(); if (p < bestP){ bestP = p; best = m; } applyMask(m); }
+    applyMask(best); fmt(best);
+    return mod;
+  }
+  function draw(canvas, text, px = 8){
+    const m = encode(text), n = m.length, q = 4, S = (n + q * 2) * px;
+    canvas.width = canvas.height = S;
+    const c = canvas.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, S, S); c.fillStyle = '#000000';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (m[y][x]) c.fillRect((x + q) * px, (y + q) * px, px, px);
+  }
+  return {encode, draw};
+})();
+
+/* =====================================================================
+   Estado, navegación, mapa
+   ===================================================================== */
+const ui = {base:'Mapa', view:'mapa', mode:'all', now:false, kinds:[], ams:[], sort:'dist', sel:null, mapView:null};
+let bk = null, payDraft = {name:'', method:'Yape'}, wz = null, current = {name:'explorar', params:{}}, stack = [], cleanup = null, resTab = 'next', askRes = null;
+const views = {}, after = {}, A = {};
+const $app = $('#app');
+const TABOF = {explorar:'explorar', space:'explorar', book:'explorar', reservas:'reservas', res:'reservas', scan:'scan', scanres:'scan', ofrecer:'ofrecer', wizard:'ofrecer', hosted:'ofrecer', localqr:'ofrecer', perfil:'perfil'};
+const TABS = [{k:'explorar', l:'Explorar', i:'compass'}, {k:'reservas', l:'Reservas', i:'calendar'}, {k:'scan', l:'Escanear', i:'scan', fab:true}, {k:'ofrecer', l:'Ofrecer', i:'building'}, {k:'perfil', l:'Perfil', i:'user'}];
+
+function renderTabs(){
+  const cur = TABOF[current.name];
+  $('#tabsIn').innerHTML = TABS.map(t => `<button class="${t.fab ? 'fab' : ''}" data-act="tab" data-to="${t.k}" ${cur === t.k ? 'aria-current="page"' : ''} aria-label="${t.l}">${I(t.i)}${t.fab ? '<span class="sr">' + t.l + '</span>' : t.l}</button>`).join('');
+}
+function draw(){
+  if (cleanup){ try{ cleanup(); }catch(e){} cleanup = null; }
+  document.body.dataset.route = current.name;
+  $app.innerHTML = '<div class="screen">' + views[current.name](current.params || {}) + '</div>';
+  const a = after[current.name]; if (a) cleanup = a(current.params || {}) || null;
+  renderTabs(); if (typeof refreshCampus === 'function') refreshCampus();
+}
+function redraw(){ const y = window.scrollY; draw(); window.scrollTo(0, y); }
+function go(name, params = {}, o = {}){
+  if (o.reset) stack = []; else if (!o.replace) stack.push(current);
+  current = {name, params}; draw(); window.scrollTo(0, 0); $app.focus({preventScroll:true});
+}
+function goBase(name, params = {}){ stack = [{name:'explorar', params:{}}]; current = {name, params}; draw(); window.scrollTo(0, 0); }
+function tab(to){ stack = []; current = {name:to, params:{}}; draw(); window.scrollTo(0, 0); $app.focus({preventScroll:true}); }
+function back(){ current = stack.pop() || {name:'explorar', params:{}}; draw(); window.scrollTo(0, 0); }
+
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3000); }
+function sheet(html){
+  $('#layer').innerHTML = `<div class="scrim"><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+  const f = $('#layer .sheet input, #layer .sheet button'); if (f) f.focus({preventScroll:true});
+}
+function closeSheet(){ $('#layer').innerHTML = ''; if (askRes){ const r = askRes; askRes = null; r(false); } }
+function ask(title, text, ok, danger){
+  return new Promise(res => {
+    sheet(`<h2>${esc(title)}</h2><p style="margin:6px 0 4px;color:var(--ink-2)">${esc(text)}</p>
+      <div class="btn-row"><button class="btn line" data-act="ask" data-v="0">Volver</button><button class="btn ${danger ? 'danger' : 'primary'}" data-act="ask" data-v="1">${esc(ok)}</button></div>`);
+    askRes = res;
+  });
+}
+const notFound = () => `<button class="back" data-act="back">${I('chevL')}Volver</button><div class="empty">${I('info')}<p>No encontramos esta página.</p></div>`;
+
+/* ---------- mapa: Leaflet si hay conexión, esquema SVG si no ---------- */
+let leafletP = null;
+function loadLeaflet(){
+  if (leafletP) return leafletP;
+  leafletP = new Promise(res => {
+    if (window.L) return res(true);
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'; document.head.appendChild(css);
+    const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    const t = setTimeout(() => res(false), 6000);
+    s.onload = () => { clearTimeout(t); res(!!window.L); };
+    s.onerror = () => { clearTimeout(t); res(false); };
+    document.head.appendChild(s);
+  });
+  return leafletP;
+}
+const pinHtml = p => `<div class="pin ${p.tone}${p.sel ? ' sel' : ''}">${esc(p.label)}</div>`;
+const UTEC_HTML = `<div class="utec"><i></i><b>UTEC</b></div>`;
+
+function leafletImpl(el, ctl, o){
+  const v = o.remember && ui.mapView ? ui.mapView : {c:[UTEC.lat - 150 / M_LAT, UTEC.lng], z:15};
+  const map = L.map(el, {zoomControl:true, scrollWheelZoom:false, minZoom:14, maxZoom:19}).setView(v.c, v.z);
+  const base = {
+    'Mapa': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'Mosaicos © Esri'}),
+    'Calles (OSM)': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}),
+    'Satélite': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'Imágenes © Esri, Maxar, Earthstar Geographics'})
+  };
+  const pickBase = base[ui.base] ? ui.base : 'Mapa';
+  base[pickBase].addTo(map);
+  L.control.layers(base, null, {position:'topright', collapsed:true}).addTo(map);
+  const circle = L.circle([UTEC.lat, UTEC.lng], {radius:500, color:pickBase === 'Satélite' ? '#ffffff' : '#0B6A9E', weight:2, dashArray:'4 7', fillColor:'#0B6A9E', fillOpacity:.04}).addTo(map);
+  map.on('baselayerchange', e => { ui.base = e.name; circle.setStyle({color:e.name === 'Satélite' ? '#ffffff' : '#0B6A9E'}); });
+  L.marker([UTEC.lat, UTEC.lng], {icon:L.divIcon({className:'', html:UTEC_HTML, iconSize:[70, 20], iconAnchor:[10, 10]}), interactive:false, keyboard:false, zIndexOffset:-500}).addTo(map);
+  const layer = L.layerGroup().addTo(map); let pickM = null;
+  if (o.remember) map.on('moveend', () => { const c = map.getCenter(); ui.mapView = {c:[c.lat, c.lng], z:map.getZoom()}; });
+  if (o.onTap) map.on('click', e => o.onTap({lat:e.latlng.lat, lng:e.latlng.lng}));
+  setTimeout(() => map.invalidateSize(), 60);
+  return {
+    setPins(pins){
+      layer.clearLayers();
+      pins.forEach(p => {
+        const m = L.marker([p.lat, p.lng], {icon:L.divIcon({className:'', html:pinHtml(p), iconSize:[40, 38], iconAnchor:[20, 38]}), title:p.title, keyboard:true, zIndexOffset:p.sel ? 1000 : 0});
+        m.on('click', () => o.onPin && o.onPin(p.id)); m.addTo(layer);
+      });
+    },
+    setPick(p){
+      if (pickM){ map.removeLayer(pickM); pickM = null; }
+      if (p) pickM = L.marker([p.lat, p.lng], {icon:L.divIcon({className:'', html:`<div class="pin pick">${I('pin')}</div>`, iconSize:[40, 38], iconAnchor:[20, 38]}), interactive:false}).addTo(map);
+    },
+    destroy(){ map.remove(); }
+  };
+}
+function svgImpl(el, ctl, o){
+  const S = .3, P = (lat, lng) => ({x:200 + (lng - UTEC.lng) * M_LNG * S, y:200 - (lat - UTEC.lat) * M_LAT * S});
+  const ring = r => `<circle class="m-ring" cx="200" cy="200" r="${r * S}"/>`;
+  el.innerHTML = `<svg class="svgmap" viewBox="0 0 400 400" role="img" aria-label="Esquema referencial del entorno de UTEC">
+    <rect class="m-land" width="400" height="400"/>
+    <path class="m-sea" d="M0 0 L20 0 Q8 200 24 400 L0 400Z"/>
+    <path class="m-park" d="M262 238 q28-24 62-6 q18 22-6 44 q-34 14-58-8z"/>
+    <path class="m-park" d="M40 60 q40-22 74 0 q8 34-30 44 q-40 0-44-44z"/>
+    <path class="m-hw" stroke-width="13" d="M284 -10 Q308 110 296 210 T324 410"/>
+    <text x="302" y="60" font-size="9" transform="rotate(84 302 60)">Vía Expresa (ref.)</text>
+    <g class="m-st" stroke-width="9"><path d="M-10 120 L410 90"/><path d="M-10 300 L410 270"/><path d="M110 -10 L135 410"/><path d="M290 -10 L310 410"/></g>
+    <g class="m-st" stroke-width="5"><path d="M-10 190 L410 170"/><path d="M-10 360 L410 340"/><path d="M200 -10 L218 410"/><path d="M45 -10 L68 410"/><path d="M370 -10 L388 410"/><path d="M-10 40 L410 22"/></g>
+    <g class="m-st2" stroke-width="2"><path d="M0 230 L400 214"/><path d="M0 330 L400 312"/><path d="M160 0 L178 400"/><path d="M250 0 L268 400"/></g>
+    ${ring(250)}${ring(500)}
+    <text x="200" y="${200 + 500 * S + 14}" text-anchor="middle" font-size="9">500 m</text>
+    <text x="200" y="${200 + 250 * S + 12}" text-anchor="middle" font-size="9">250 m</text>
+    <text x="8" y="392" font-size="9">Esquema referencial (sin conexión al mapa)</text>
+    <g transform="translate(200 200)"><circle r="8" fill="#0B0B0C" stroke="#fff" stroke-width="2.5"/><rect x="12" y="-9" width="44" height="18" rx="5" fill="#0B0B0C" stroke="#fff" stroke-width="2"/><text x="34" y="4" text-anchor="middle" font-size="11" font-weight="800" style="fill:#fff">UTEC</text></g>
+    <g id="gpins"></g><g id="gpick"></g>
+  </svg>`;
+  const svg = $('svg', el), gp = $('#gpins', el), gk = $('#gpick', el);
+  svg.addEventListener('click', e => {
+    const pin = e.target.closest('.svgpin');
+    if (pin){ o.onPin && o.onPin(pin.dataset.id); return; }
+    if (o.onTap){
+      const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+      const l = pt.matrixTransform(svg.getScreenCTM().inverse());
+      o.onTap({lat:UTEC.lat - (l.y - 200) / (M_LAT * S), lng:UTEC.lng + (l.x - 200) / (M_LNG * S)});
+    }
+  });
+  svg.addEventListener('keydown', e => { const pin = e.target.closest && e.target.closest('.svgpin'); if (pin && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); o.onPin && o.onPin(pin.dataset.id); } });
+  return {
+    setPins(pins){
+      gp.innerHTML = pins.slice().sort((a, b) => a.sel - b.sel).map(p => {
+        const q = P(p.lat, p.lng), sc = p.sel ? 1.2 : 1;
+        return `<g class="svgpin ${p.tone}${p.sel ? ' sel' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="${esc(p.title)}" transform="translate(${q.x.toFixed(1)} ${q.y.toFixed(1)}) scale(${sc})">
+          <path class="bd" d="M0 0 L-6 -9 L-14 -9 Q-17 -9 -17 -12 L-17 -26 Q-17 -29 -14 -29 L14 -29 Q17 -29 17 -26 L17 -12 Q17 -9 14 -9 L6 -9 Z"/>
+          <text x="0" y="-14">${esc(p.label)}</text></g>`;
+      }).join('');
+    },
+    setPick(p){
+      if (!p){ gk.innerHTML = ''; return; }
+      const q = P(p.lat, p.lng);
+      gk.innerHTML = `<g transform="translate(${q.x.toFixed(1)} ${q.y.toFixed(1)})"><path d="M0 0 L-7 -12 A9 9 0 1 1 7 -12Z" fill="#0B6A9E" stroke="#fff" stroke-width="2"/><circle cx="0" cy="-19" r="3" fill="#fff"/></g>`;
+    },
+    destroy(){}
+  };
+}
+function createMap(el, o){
+  const ctl = {pins:o.pins || [], pick:o.pick || null, impl:null, dead:false,
+    setPins(p){ this.pins = p; if (this.impl) this.impl.setPins(p); },
+    setPick(p){ this.pick = p; if (this.impl) this.impl.setPick(p); },
+    destroy(){ this.dead = true; if (this.impl) this.impl.destroy(); }};
+  el.innerHTML = '<div class="map-loading">Cargando mapa…</div>';
+  loadLeaflet().then(ok => {
+    if (ctl.dead) return;
+    el.innerHTML = '';
+    let impl; try{ impl = ok ? leafletImpl(el, ctl, o) : svgImpl(el, ctl, o); }catch(e){ el.innerHTML = ''; impl = svgImpl(el, ctl, o); }
+    ctl.impl = impl; impl.setPins(ctl.pins); impl.setPick(ctl.pick);
+  });
+  return ctl;
+}
+
+/* =====================================================================
+   Explorar
+   ===================================================================== */
+const FILTERS = [
+  {f:'now', l:'Disponible ahora', i:'clock'}, {f:'k:estudio', l:'Estudio en silencio', i:'volume'}, {f:'k:equipo', l:'Trabajo en equipo', i:'users'},
+  {f:'k:descanso', l:'Puff y descanso', i:'puff'}, {f:'k:llamadas', l:'Videollamadas', i:'headset'}, {f:'a:wifi', l:'Wi-Fi', i:'wifi'},
+  {f:'a:plug', l:'Enchufes', i:'plug'}, {f:'a:table', l:'Mesas', i:'table'}, {f:'a:board', l:'Pizarra', i:'board'}, {f:'a:ac', l:'Aire acondicionado', i:'ac'}, {f:'a:coffee', l:'Café', i:'coffee'}
+];
+const isOn = f => f === 'now' ? ui.now : f.startsWith('k:') ? ui.kinds.includes(f.slice(2)) : ui.ams.includes(f.slice(2));
+const zf = z => (ui.mode === 'all' || z.modes.includes(ui.mode)) && (!ui.kinds.length || ui.kinds.includes(z.kind)) && ui.ams.every(a => a in z.am);
+function results(){
+  let arr = spaces().map(s => {
+    const zs = s.zones.filter(zf), st = spaceNow(s, zf);
+    const prices = zs.flatMap(z => Object.entries(z.price).filter(([m]) => ui.mode === 'all' || m === ui.mode).map(([, p]) => p));
+    return {s, zs, st, d:dist(UTEC, s), price:prices.length ? Math.min(...prices) : 0};
+  }).filter(o => o.zs.length);
+  if (ui.now) arr = arr.filter(o => o.st.state !== 'off');
+  const by = {dist:(a, b) => a.d - b.d, free:(a, b) => b.st.free - a.st.free || a.d - b.d, price:(a, b) => a.price - b.price || a.d - b.d};
+  return arr.sort(by[ui.sort]);
+}
+function spaceCard(o){
+  const {s, zs, st} = o;
+  const modes = [...new Set(zs.flatMap(z => z.modes))], ams = [...new Set(zs.flatMap(z => Object.keys(z.am)))];
+  const tone = st.state === 'ok' ? 'ok' : st.state === 'low' ? 'warn' : 'off';
+  return `<button class="scard ${st.state === 'ok' ? '' : st.state}" data-act="open" data-id="${s.id}">
+    <div class="top"><span class="tag">${esc(s.kind)}</span><span class="tag ${tone}">${st.state === 'off' ? '' : I('check')}${esc(st.txt)}</span></div>
+    <h3>${esc(s.name)}</h3>
+    <div class="meta"><span>${I('pin')}${distTxt(s)} de UTEC, ${walkMin(s)} min a pie</span><span>${I('card')}Desde ${money(o.price)} la hora</span></div>
+    <div class="modes">${modes.map(m => `<span class="tag">${I(MODES[m].i)}${MODES[m].l}</span>`).join('')}</div>
+    <div class="amrow">${ams.map(a => `<span title="${AM[a].l}">${I(a)}<span class="sr">${AM[a].l}</span></span>`).join('')}</div>
+  </button>`;
+}
+function bannerHtml(){
+  const r = currentRes(); if (!r) return '';
+  const act = r.status === 'active';
+  return `<button class="banner" data-act="res" data-id="${r.id}">${I(act ? 'login' : 'calendar')}
+    <div><b>${act ? 'En curso en ' + esc(r.sname) : 'Próxima reserva: ' + esc(r.sname)}</b>
+    <span>${act ? 'Termina a las ' + hm(r.start + r.dur) + '. Escanea el QR al salir.' : dayLabel(r.date) + ' a las ' + hm(r.start) + '. Escanea el QR al llegar.'}</span></div>${I('chevR')}</button>`;
+}
+const allClosed = () => { const m = minsOf(now()); return !spaces().some(s => !s.paused && m >= s.open && m < s.close); };
+views.explorar = () => `
+  ${bannerHtml()}
+  ${allClosed() ? `<div class="banner" style="cursor:default">${I('clock')}<div><b>A esta hora los espacios están cerrados</b><span>Reserva para mañana, o prueba otra hora en Perfil, en Modo demostración.</span></div></div>` : ''}
+  <h1 class="display">Estudia cerca de UTEC, sin dar vueltas</h1>
+  <p class="lede">Reserva por hora un espacio libre en cafeterías, departamentos y coworkings del barrio. Llegas, escaneas el QR y te sientas.</p>
+  <div id="exFilters"></div>
+  <div id="exView"></div>`;
+let exMap = null;
+const pinsOf = res => res.map(o => ({id:o.s.id, lat:o.s.lat, lng:o.s.lng, tone:o.st.state, label:o.st.state === 'off' ? '–' : String(o.st.free), sel:o.s.id === ui.sel, title:o.s.name + ', ' + o.st.txt}));
+function exFiltersHtml(){
+  return `<div class="seg" role="group" aria-label="Vista">
+      <button data-act="view" data-v="mapa" aria-pressed="false">${I('map')}Mapa</button>
+      <button data-act="view" data-v="lista" aria-pressed="false">${I('list')}Lista</button></div>
+    <div class="sp"></div>
+    <div class="seg mark sm" role="group" aria-label="Modalidad de reserva">
+      <button data-act="mode" data-v="all" aria-pressed="false">Todas</button>
+      ${Object.entries(MODES).map(([k, m]) => `<button data-act="mode" data-v="${k}" aria-pressed="false">${m.l}</button>`).join('')}
+    </div>
+    <div class="sp"></div>
+    <div class="chips scroll" role="group" aria-label="Filtros">
+      ${FILTERS.map(f => `<button class="chip" data-act="filter" data-f="${f.f}" aria-pressed="false">${I(f.i)}${f.l}</button>`).join('')}
+    </div>
+    <div class="row" style="justify-content:space-between;margin:2px 0 10px">
+      <b id="exCount" style="font-family:var(--serif);font-size:16px"></b>
+      <label class="row small" style="gap:6px">Ordenar
+        <select data-bind="ui.sort" data-redo="1" style="width:auto;min-height:38px;padding:6px 8px;font-size:14px">
+          <option value="dist">Más cerca</option><option value="free">Más libres</option><option value="price">Más barato</option></select></label>
+    </div>`;
+}
+function exSync(n){
+  $$('#exFilters [data-act="view"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === ui.view)));
+  $$('#exFilters [data-act="mode"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === ui.mode)));
+  $$('#exFilters [data-act="filter"]').forEach(b => b.setAttribute('aria-pressed', String(isOn(b.dataset.f))));
+  $('#exCount').textContent = n + (n === 1 ? ' espacio' : ' espacios');
+  const sel = $('#exFilters select'); if (sel) sel.value = ui.sort;
+}
+function exPrevPaint(res){
+  const o = (res || results()).find(x => x.s.id === ui.sel), box = $('#exPrev'); if (!box) return;
+  box.innerHTML = o ? spaceCard(o) + '<p class="small" style="margin:6px 2px 0">Toca la ficha para ver las zonas, los servicios y reservar.</p>'
+    : `<div class="empty" style="margin-top:0">${I('pin')}<p>Toca un marcador para ver el espacio.</p></div>`;
+}
+function exPaint(){
+  const res = results(), v = $('#exView'); if (!v) return;
+  exSync(res.length);
+  if (ui.view === 'mapa'){
+    if (!exMap){
+      v.innerHTML = `<div class="map" id="exMapEl" role="region" aria-label="Mapa de espacios cerca de UTEC"></div>
+        <p class="cap" style="margin-bottom:4px">Lámina 1. Entorno de UTEC (radio de 500 m). El número es la cantidad de puestos libres ahora.</p>
+        <a class="small" style="margin:0 2px 8px;display:inline-flex;gap:5px;align-items:center" target="_blank" rel="noopener" href="https://earth.google.com/web/@${UTEC.lat},${UTEC.lng},60a,1200d,35y,0h,0t,0r">${I('route')}Ver la zona en Google Earth</a>
+        <div class="legend"><span><i class="g"></i>Varios libres</span><span><i class="y"></i>Quedan pocos</span><span><i class="n"></i>Sin cupo o cerrado</span></div>
+        <div id="exPrev"></div>`;
+      exMap = createMap($('#exMapEl'), {pins:pinsOf(res), remember:true, onPin:id => { ui.sel = id; exMap.setPins(pinsOf(results())); exPrevPaint(); }});
+    } else exMap.setPins(pinsOf(res));
+    exPrevPaint(res);
+  } else {
+    if (exMap){ exMap.destroy(); exMap = null; }
+    v.innerHTML = res.length ? `<div class="cards">${res.map(spaceCard).join('')}</div>` :
+      `<div class="empty">${I('info')}<p>Ningún espacio cumple todos los filtros.</p><button class="btn line sm" data-act="clearf">Quitar filtros</button></div>`;
+  }
+  if (ui.view === 'mapa' && !res.length) exPrevPaint(res);
+}
+after.explorar = () => {
+  $('#exFilters').innerHTML = exFiltersHtml(); exPaint();
+  return () => { if (exMap){ exMap.destroy(); exMap = null; } };
+};
+
+/* =====================================================================
+   Detalle del espacio
+   ===================================================================== */
+function zoneHtml(s, z){
+  const m = minsOf(now()), open = !s.paused && m >= s.open && m < s.close;
+  const free = open ? zoneFree(s, z, dkey(now()), m, 30) : 0;
+  const cls = !open || free === 0 ? 'off' : free <= 3 ? 'warn' : 'ok';
+  const txt = !open ? 'Cerrado ahora' : free === 0 ? 'Sin cupo ahora' : `${free} de ${z.cap} libres ahora`;
+  return `<article class="zone">
+    <div class="zh"><span class="tag">${I(KINDS[z.kind].i)}${KINDS[z.kind].l}</span><span class="tag ${cls}">${txt}</span></div>
+    <h3>${esc(z.name)}</h3>
+    ${z.ideal ? `<p class="ideal"><b>Ideal para:</b> ${esc(z.ideal)}</p>` : ''}
+    <ul class="amlist">${Object.entries(z.am).map(([k, d]) => `<li>${I(k)}<span>${AM[k].l}${d ? `<small>${esc(d)}</small>` : ''}</span></li>`).join('')}</ul>
+    <div class="noise">${I('volume')}<span>Ruido: ${NOISE[z.noise]}</span><span class="dots" aria-hidden="true">${[1, 2, 3].map(i => `<i class="${i <= z.noise ? 'on' : ''}"></i>`).join('')}</span></div>
+    <div class="priceline">${z.modes.map(k => `<span class="tag">${I(MODES[k].i)}${MODES[k].l}: ${money(z.price[k])} por persona la hora</span>`).join('')}</div>
+    <button class="btn primary" data-act="book" data-sid="${s.id}" data-zid="${z.id}">Reservar en esta zona</button>
+  </article>`;
+}
+views.space = ({sid}) => {
+  const s = spaceById(sid); if (!s) return notFound();
+  return `<button class="back" data-act="back">${I('chevL')}Volver</button>
+  <div class="row" style="flex-wrap:wrap"><span class="tag">${esc(s.kind)}</span>${s.verified ? `<span class="tag ok">${I('shield')}Anfitrión verificado</span>` : `<span class="tag pend">${I('info')}Verificación pendiente</span>`}</div>
+  <h1 class="title" style="margin-top:10px">${esc(s.name)}</h1>
+  ${s.about ? `<p class="lede" style="margin-bottom:10px">${esc(s.about)}</p>` : ''}
+  <div class="meta" style="flex-direction:column;gap:6px">
+    <span>${I('pin')}${esc(s.addr)}</span>
+    <span>${I('route')}${distTxt(s)} de UTEC, ${walkMin(s)} min a pie</span>
+    <span>${I('clock')}${esc(openTxt(s))}</span>
+    <span>${I('user')}Anfitrión: ${esc(s.host)}</span>
+  </div>
+  <a class="btn line sm" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=walking">${I('route')}Cómo llegar a pie</a>
+  <h2 class="sec">Zonas para reservar</h2>
+  ${s.zones.map(z => zoneHtml(s, z)).join('')}
+  <h2 class="sec">Reglas del lugar</h2>
+  <ul class="rules">${(s.rules && s.rules.length ? s.rules : ['El anfitrión no definió reglas especiales.']).map(r => `<li>${I('shield')}<span>${esc(r)}</span></li>`).join('')}</ul>
+  <p class="note">Datos de ejemplo para el prototipo: los locales, anfitriones, precios y cupos son ficticios.</p>`;
+};
+
+/* =====================================================================
+   Reservar
+   ===================================================================== */
+const needed = () => bk.mode === 'grup' ? bk.people : 1;
+function bkInit(sid, zid){
+  const z = zoneOf(spaceById(sid), zid);
+  bk = {sid, zid, mode:(ui.mode !== 'all' && z.modes.includes(ui.mode)) ? ui.mode : z.modes[0], people:2, date:dkey(now()), start:null, dur:60};
+}
+function bkSlots(s, z){
+  const out = [], t = now(), nm = minsOf(t), today = bk.date === dkey(t);
+  let ahora = null;
+  if (today && !s.paused && nm >= s.open && nm < s.close){ ahora = Math.ceil(nm / 5) * 5; out.push({v:ahora, label:'Ahora', now:true}); }
+  for (let m = Math.ceil(s.open / 30) * 30; m < s.close; m += 30){ if (today && m <= nm) continue; if (m === ahora) continue; out.push({v:m, label:hm(m)}); }
+  return out.map(o => { const fits = o.v + bk.dur <= s.close && !s.paused; const free = fits ? zoneFree(s, z, bk.date, o.v, bk.dur) : 0; return {...o, free, ok:fits && free >= needed()}; });
+}
+const bkTotal = z => z.price[bk.mode] * needed() * bk.dur / 60;
+views.book = ({sid, zid}) => {
+  const s = spaceById(sid); if (!s) return notFound();
+  const z = zoneOf(s, zid); if (!bk || bk.sid !== sid || bk.zid !== zid) bkInit(sid, zid);
+  const slots = bkSlots(s, z);
+  if (bk.start != null){ const f = slots.find(x => x.v === bk.start); if (!f || !f.ok) bk.start = null; }
+  const durs = [30, 60, 90, 120, 180, 240].filter(d => d <= s.maxDur);
+  const maxP = Math.min(8, z.cap);
+  const slotBtn = o => `<button class="slot ${o.now ? 'wide' : ''}" data-act="start" data-v="${o.v}" aria-pressed="${bk.start === o.v}" ${o.ok ? '' : 'disabled'}>
+      ${o.now ? `<b>Ahora, desde las ${hm(o.v)}</b>` : `<b>${o.label}</b>`}<small>${!o.ok ? (o.v + bk.dur > s.close ? 'no alcanza' : 'sin cupo') : o.free <= 3 ? 'quedan ' + o.free : 'libre'}</small></button>`;
+  const sel = bk.start != null;
+  return `<button class="back" data-act="back">${I('chevL')}Volver</button>
+  <p class="small" style="margin:0">${esc(s.name)}</p>
+  <h1 class="title">${esc(z.name)}</h1>
+  <div class="row" style="flex-wrap:wrap;margin-bottom:4px"><span class="tag">${I(KINDS[z.kind].i)}${KINDS[z.kind].l}</span>${Object.keys(z.am).map(a => `<span class="tag" title="${AM[a].l}">${I(a)}${AM[a].l}</span>`).join('')}</div>
+
+  <h2 class="sec">Paso 1. Modalidad</h2>
+  ${z.modes.map(k => `<button class="opt" data-act="bmode" data-v="${k}" aria-pressed="${bk.mode === k}"><span class="oi">${I(MODES[k].i)}</span>
+    <span><b>${MODES[k].l}</b><small>${MODES[k].d}</small></span><span class="pr">${money(z.price[k])}<small>por persona/h</small></span></button>`).join('')}
+  ${bk.mode === 'grup' ? `<div class="row" style="justify-content:space-between;margin-top:4px"><span><b>Integrantes del grupo</b><br><span class="small">De 2 a ${maxP} personas</span></span>
+    <span class="stepper"><button data-act="people" data-d="-1" aria-label="Menos personas" ${bk.people <= 2 ? 'disabled' : ''}>${I('minus')}</button><output aria-live="polite">${bk.people}</output><button data-act="people" data-d="1" aria-label="Más personas" ${bk.people >= maxP ? 'disabled' : ''}>${I('plus')}</button></span></div>` : ''}
+
+  <h2 class="sec">Paso 2. Día</h2>
+  <div class="days" role="group" aria-label="Día">${[0, 1, 2, 3, 4, 5, 6].map(i => { const k = addDays(i); return `<button class="chip" data-act="date" data-v="${k}" aria-pressed="${bk.date === k}">${dayLabel(k)}</button>`; }).join('')}</div>
+
+  <h2 class="sec">Paso 3. Duración</h2>
+  <div class="chips" role="group" aria-label="Duración">${durs.map(d => `<button class="chip" data-act="dur" data-v="${d}" aria-pressed="${bk.dur === d}">${durTxt(d)}</button>`).join('')}</div>
+
+  <h2 class="sec">Paso 4. Hora de inicio</h2>
+  ${slots.length ? `<div class="slots" role="group" aria-label="Hora de inicio">${slots.map(slotBtn).join('')}</div>` : `<div class="empty">${I('clock')}<p>No quedan horarios para este día. Prueba con otro día.</p></div>`}
+  ${slots.length && !slots.some(x => x.ok) ? `<p class="small" style="margin-top:8px">No hay cupo para ${durTxt(bk.dur)}${bk.mode === 'grup' ? ' con ' + bk.people + ' personas' : ''}. Prueba con menos tiempo u otro día.</p>` : ''}
+  ${sel ? `<div class="ficha" style="margin-top:18px"><div class="fh"><span>Resumen</span></div>
+    <div class="fr"><span>Llegada</span><span>${dayLabel(bk.date)}, ${hm(bk.start)}</span></div>
+    <div class="fr"><span>Salida prevista</span><span>${hm(bk.start + bk.dur)}</span></div>
+    <div class="fr"><span>Personas</span><span>${needed()}</span></div>
+    <div class="fr"><span>Comisión de Pausa</span><span>S/ 0 (piloto)</span></div></div>` : ''}
+  <div class="cta-bar"><div class="in"><div class="tot"><small>Total</small><b>${money(bkTotal(z))}</b></div>
+    <button class="btn primary" data-act="openpay" ${sel ? '' : 'disabled'}>${sel ? 'Reservar y pagar' : 'Elige una hora'}</button></div></div>`;
+};
+function overlapRes(date, start, dur){ return syncRes().find(r => (r.status === 'confirmed' || r.status === 'active') && r.date === date && r.start < start + dur && r.start + r.dur > start); }
+function openPay(){
+  const s = spaceById(bk.sid), z = zoneOf(s, bk.zid);
+  if (!payDraft.name) payDraft.name = db.user.name || '';
+  sheet(`<h2>Confirma y paga</h2>
+    <p class="small" style="margin:0 0 8px">Pago simulado: no se cobra nada.</p>
+    <div class="fr" style="padding-top:4px"><span>Espacio</span><span>${esc(s.name)}</span></div>
+    <div class="fr"><span>Zona</span><span>${esc(z.name)}</span></div>
+    <div class="fr"><span>Modalidad</span><span>${MODES[bk.mode].l}${bk.mode === 'grup' ? ', ' + bk.people + ' personas' : ''}</span></div>
+    <div class="fr"><span>Horario</span><span>${dayLabel(bk.date)}, ${hm(bk.start)} a ${hm(bk.start + bk.dur)}</span></div>
+    <div class="fr"><span>Total</span><span>${money(bkTotal(z))}</span></div>
+    <label class="field"><span>Tu nombre</span><input type="text" id="payName" data-bind="pay.name" value="${esc(payDraft.name)}" placeholder="Nombre y apellido" autocomplete="name"></label>
+    <div class="field"><span style="font-size:13px;font-weight:700;color:var(--ink-2)">Medio de pago</span>
+      <div class="chips" id="payMethods" style="margin-top:6px">${[['Yape', 'phone'], ['Plin', 'phone'], ['Tarjeta', 'card']].map(([m, ic]) => `<button class="chip" data-act="method" data-v="${m}" aria-pressed="${payDraft.method === m}">${I(ic)}${m}</button>`).join('')}</div></div>
+    <button class="btn mark" id="payBtn" data-act="paynow">Pagar ${money(bkTotal(z))}</button>
+    <button class="btn line sm" data-act="closesheet">Cancelar</button>`);
+}
+function payNow(){
+  const name = (payDraft.name || '').trim();
+  if (name.length < 2){ toast('Escribe tu nombre para la reserva.'); const i = $('#payName'); if (i) i.focus(); return; }
+  const s = spaceById(bk.sid), z = zoneOf(s, bk.zid);
+  const clash = overlapRes(bk.date, bk.start, bk.dur);
+  if (clash){ toast('Ya tienes una reserva a esa hora en ' + clash.sname + '.'); return; }
+  const btn = $('#payBtn'); btn.disabled = true; btn.textContent = 'Procesando pago…';
+  setTimeout(() => {
+    const r = {id:'r' + Date.now().toString(36), code:'PA-' + Math.random().toString(36).slice(2, 6).toUpperCase(), sid:s.id, sname:s.name, zid:z.id, zname:z.name, zkind:z.kind,
+      mode:bk.mode, people:needed(), date:bk.date, start:bk.start, dur:bk.dur, total:bkTotal(z), pay:payDraft.method, name, status:'confirmed', inAt:null, outAt:null, rating:0};
+    db.res = db.res.concat([r]); const u = db.user; u.name = name; db.user = u;
+    $('#layer').innerHTML = ''; askRes = null; bk = null;
+    goBase('res', {rid:r.id, fresh:true});
+  }, 850);
+}
+
+/* =====================================================================
+   Ficha de reserva, detalle, lista
+   ===================================================================== */
+function fichaHtml(r, o = {}){
+  const inBox = r.inAt ? `<span class="stamp ${o.fresh === 'in' ? 'new' : ''}">Ingreso<small>${hmTs(r.inAt)}</small></span>` : '<span class="blank"></span>';
+  const outBox = r.outAt ? `<span class="stamp out ${o.fresh === 'out' ? 'new' : ''}">Salida<small>${hmTs(r.outAt)}</small></span>` : '<span class="blank"></span>';
+  return `<article class="ficha">
+    <div class="fh"><span class="sig">${esc(r.code)}</span><span class="status ${r.status}">${STATUS[r.status]}</span></div>
+    <h3>${esc(r.sname)}</h3>
+    <div class="small">${esc(r.zname)}</div>
+    <div class="fr" style="margin-top:8px"><span>Modalidad</span><span>${MODES[r.mode].l}${r.mode === 'grup' ? ', ' + r.people + ' personas' : ''}</span></div>
+    <div class="fr"><span>Día</span><span>${dayLabel(r.date)}</span></div>
+    <div class="fr"><span>Horario</span><span>${hm(r.start)} a ${hm(r.start + r.dur)} (${durTxt(r.dur)})</span></div>
+    ${o.full ? `<div class="fr"><span>Pagado</span><span>${money(r.total)} con ${esc(r.pay)}</span></div><div class="fr"><span>A nombre de</span><span>${esc(r.name)}</span></div>` : ''}
+    <div class="stamps">
+      <div class="stampbox"><span class="t">Ingreso</span>${inBox}</div>
+      <div class="stampbox"><span class="t">Salida</span>${outBox}</div>
+    </div>
+  </article>`;
+}
+views.res = ({rid, fresh, stamp}) => {
+  const r = syncRes().find(x => x.id === rid); if (!r) return notFound();
+  const s = spaceById(r.sid), t = now().getTime();
+  let info = '', actions = '';
+  if (r.status === 'confirmed'){
+    const mins = Math.round((rStart(r) - t) / 60000);
+    info = mins > 15 ? `Podrás ingresar desde las ${hm(r.start - 15)}. Faltan ${durTxt(Math.max(1, mins))}.` : 'Ya puedes ingresar. Escanea el QR del local al llegar.';
+    actions = `<button class="btn mark" data-act="tab" data-to="scan">${I('scan')}Escanear al llegar</button>
+      ${s ? `<a class="btn line" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=walking">${I('route')}Cómo llegar a pie</a>` : ''}
+      ${r.mode === 'grup' ? `<button class="btn line" data-act="invite" data-id="${r.id}">${I('share')}Compartir con mi grupo</button>` : ''}
+      <button class="btn danger" data-act="cancelres" data-id="${r.id}">Cancelar reserva</button>`;
+  } else if (r.status === 'active'){
+    const left = Math.round((rEnd(r) - t) / 60000);
+    info = left > 0 ? `Tu turno termina a las ${hm(r.start + r.dur)}. Quedan ${durTxt(left)}.` : 'Tu hora ya terminó. Escanea el QR para registrar tu salida.';
+    actions = `<button class="btn mark" data-act="tab" data-to="scan">${I('logout')}Escanear al salir</button>
+      <button class="btn line" data-act="extend" data-id="${r.id}">${I('plus')}Extender 30 min</button>`;
+  } else if (r.status === 'done'){
+    const used = r.inAt && r.outAt ? Math.max(1, Math.round((r.outAt - r.inAt) / 60000)) : 0;
+    info = used ? `Estuviste ${durTxt(used)} en el espacio.` : '';
+    actions = `<button class="btn primary" data-act="open" data-id="${r.sid}">Reservar de nuevo</button>`;
+  } else info = r.status === 'noshow' ? 'No registraste tu llegada a tiempo.' : 'Esta reserva fue cancelada.';
+  return `<button class="back" data-act="back">${I('chevL')}Volver</button>
+    ${fresh ? `<div class="result"><div class="big ok">${I('check')}</div><h1 class="title">Reserva confirmada</h1><p class="lede" style="margin:0 auto 14px">Escanea el QR del local al llegar y al salir. Así se sella tu ficha.</p></div>` : `<h1 class="title">Tu ficha de reserva</h1>`}
+    ${fichaHtml(r, {full:true, fresh:stamp})}
+    ${info ? `<p class="lede" style="margin:0">${info}</p>` : ''}
+    ${actions}`;
+};
+views.reservas = () => {
+  const list = syncRes().slice();
+  const next = list.filter(r => r.status === 'confirmed' || r.status === 'active').sort((a, b) => rStart(a) - rStart(b));
+  const hist = list.filter(r => r.status !== 'confirmed' && r.status !== 'active').sort((a, b) => rStart(b) - rStart(a));
+  const arr = resTab === 'next' ? next : hist;
+  const card = r => fichaHtml(r) + `<div class="btn-row" style="margin:-4px 0 18px">
+      ${r.status === 'confirmed' || r.status === 'active' ? `<button class="btn mark sm" data-act="tab" data-to="scan">${I(r.status === 'active' ? 'logout' : 'login')}${r.status === 'active' ? 'Escanear salida' : 'Escanear llegada'}</button>` : ''}
+      <button class="btn line sm" data-act="res" data-id="${r.id}">Ver ficha</button></div>`;
+  return `<h1 class="title">Mis reservas</h1>
+    <div class="seg" role="group" aria-label="Filtrar reservas" style="margin:10px 0 14px">
+      <button data-act="restab" data-v="next" aria-pressed="${resTab === 'next'}">Próximas (${next.length})</button>
+      <button data-act="restab" data-v="hist" aria-pressed="${resTab === 'hist'}">Historial (${hist.length})</button></div>
+    ${arr.length ? arr.map(card).join('') : `<div class="empty">${I('calendar')}<p>${resTab === 'next' ? 'Aún no tienes reservas próximas.' : 'Tu historial aparecerá aquí.'}</p>
+      ${resTab === 'next' ? `<button class="btn primary sm" data-act="tab" data-to="explorar">Buscar un espacio</button>` : ''}</div>`}`;
+};
+let resTimer = null;
+after.reservas = after.res = () => { clearInterval(resTimer); resTimer = setInterval(() => { if (!$('#layer').firstChild) redraw(); }, 30000); return () => clearInterval(resTimer); };
+
+/* =====================================================================
+   Escanear
+   ===================================================================== */
+let camStream = null, camTimer = null;
+function stopCam(){ clearInterval(camTimer); camTimer = null; if (camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; } }
+views.scan = () => {
+  const r = currentRes(), a = r && r.status === 'active';
+  const opts = spaces().map(s => `<option value="${s.id}" ${r && r.sid === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('');
+  return `<h1 class="title">Escanear el QR del local</h1>
+    <p class="lede">Escanea el QR de la entrada para registrar tu llegada. Al salir, vuelve a escanearlo para registrar tu salida.</p>
+    ${r ? `<div class="banner" style="cursor:default">${I(a ? 'logout' : 'login')}<div><b>${a ? 'El próximo escaneo registrará tu salida' : 'El próximo escaneo registrará tu llegada'}</b><span>${esc(r.sname)}, ${dayLabel(r.date)} ${hm(r.start)}</span></div></div>` : ''}
+    <div class="viewfinder" id="vf"><video id="vid" playsinline muted hidden></video><div class="frame" id="frm" hidden></div>
+      <div class="msg" id="vmsg">${I('camera')}Activa la cámara y apunta al QR del local.</div></div>
+    <button class="btn mark" id="camBtn" data-act="cam">${I('camera')}Activar cámara</button>
+    <h2 class="sec">¿Sin cámara? Escribe el código</h2>
+    <label class="field" style="margin-top:0"><span>Código impreso bajo el QR</span><input type="text" id="manual" placeholder="Ejemplo: PAUSA-S01" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
+    <button class="btn primary" data-act="manual">Registrar con el código</button>
+    <details style="margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px">
+      <summary style="font-weight:700;cursor:pointer">Modo demostración: simular un escaneo</summary>
+      <p class="small" style="margin:8px 0 0">Para probar sin estar en el local. Elige el espacio y simula que escaneas su QR.</p>
+      <label class="field"><span>Local</span><select id="simSel">${opts}</select></label>
+      <button class="btn line" data-act="sim">${I('scan')}Simular escaneo</button>
+      <button class="btn line" data-act="showqr">${I('qr')}Ver el QR de este local</button>
+    </details>`;
+};
+after.scan = () => {
+  const inp = $('#manual'); if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') A.manual({}); });
+  return stopCam;
+};
+async function startCam(){
+  const msg = $('#vmsg'), vid = $('#vid'), btn = $('#camBtn');
+  const fail = t => { msg.hidden = false; msg.innerHTML = I('alert') + esc(t); btn.disabled = false; };
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return fail('Este navegador no permite usar la cámara. Usa el código o el modo demostración.');
+  if (!('BarcodeDetector' in window)) return fail('Este navegador no lee QR automáticamente. Usa el código impreso o prueba en Chrome para Android.');
+  btn.disabled = true; msg.textContent = 'Abriendo cámara…';
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}, audio:false});
+    vid.srcObject = camStream; vid.hidden = false; await vid.play(); msg.hidden = true; $('#frm').hidden = false; btn.hidden = true;
+    const det = new BarcodeDetector({formats:['qr_code']});
+    camTimer = setInterval(async () => {
+      try{ const c = await det.detect(vid); if (c.length){ const raw = c[0].rawValue; stopCam(); finishScan(raw); } }catch(e){}
+    }, 300);
+  }catch(e){ fail(e && e.name === 'NotAllowedError' ? 'No diste permiso para usar la cámara. Actívalo en el navegador o usa el código.' : 'No se pudo abrir la cámara. Usa el código o el modo demostración.'); }
+}
+function finishScan(raw){
+  const res = doScan(raw);
+  go('scanres', res, {replace:true});
+}
+views.scanres = p => {
+  const r = p.rid ? db.res.find(x => x.id === p.rid) : null, s = spaceById(p.sid || (r && r.sid));
+  const retry = `<button class="btn primary" data-act="tab" data-to="scan">Escanear otra vez</button>`;
+  if (p.kind === 'in' && r) return `<div class="result"><div class="big ok">${I('login')}</div><h1 class="title">Llegada registrada</h1>
+      <p class="lede" style="margin:0 auto 14px">Ingresaste a las ${hmTs(r.inAt)}. Tu turno termina a las ${hm(r.start + r.dur)}. Al salir, vuelve a escanear el QR.</p></div>
+    ${fichaHtml(r, {fresh:'in'})}
+    <button class="btn primary" data-act="res" data-id="${r.id}">Ver mi ficha</button>
+    <button class="btn line" data-act="tab" data-to="explorar">Ir al inicio</button>`;
+  if (p.kind === 'out' && r){
+    const used = Math.max(1, Math.round((r.outAt - r.inAt) / 60000)), over = Math.round((r.outAt - rEnd(r)) / 60000);
+    return `<div class="result"><div class="big ok">${I('logout')}</div><h1 class="title">Salida registrada</h1>
+      <p class="lede" style="margin:0 auto 6px">Estuviste ${durTxt(used)} en ${esc(r.sname)}.${over > 5 ? ' Te pasaste ' + over + ' min de tu reserva; el anfitrión puede cobrarlo aparte.' : ''}</p></div>
+      ${fichaHtml(r, {fresh:'out'})}
+      <div class="result" style="padding-top:0"><b>¿Cómo estuvo el espacio?</b>
+        <div class="stars" role="group" aria-label="Calificación">${[1, 2, 3, 4, 5].map(n => `<button data-act="rate" data-id="${r.id}" data-n="${n}" aria-label="${n} de 5" aria-pressed="${r.rating >= n}">★</button>`).join('')}</div></div>
+      <button class="btn primary" data-act="tab" data-to="explorar">Buscar otro espacio</button>
+      <button class="btn line" data-act="tab" data-to="reservas">Ver mis reservas</button>`;
+  }
+  if (p.kind === 'early' && r) return `<div class="result"><div class="big warn">${I('clock')}</div><h1 class="title">Todavía no es tu hora</h1>
+      <p class="lede" style="margin:0 auto 14px">Tu reserva en ${esc(r.sname)} es ${dayLabel(r.date).toLowerCase()} a las ${hm(r.start)}. Puedes escanear desde las ${hm(r.start - 15)}.</p></div>
+    <button class="btn primary" data-act="res" data-id="${r.id}">Ver mi ficha</button>`;
+  if (p.kind === 'none') return `<div class="result"><div class="big off">${I('x')}</div><h1 class="title">No tienes una reserva activa aquí</h1>
+      <p class="lede" style="margin:0 auto 14px">No encontramos una reserva tuya vigente en ${esc(s ? s.name : 'este local')}. Reserva primero para poder ingresar.</p></div>
+    ${s ? `<button class="btn primary" data-act="open" data-id="${s.id}">Ver zonas de ${esc(s.name)}</button>` : ''}
+    <button class="btn line" data-act="tab" data-to="scan">Escanear otro código</button>`;
+  return `<div class="result"><div class="big off">${I('alert')}</div><h1 class="title">No reconocemos ese código</h1>
+    <p class="lede" style="margin:0 auto 14px">Debe ser el QR de un local de Pausa o el código impreso bajo él, por ejemplo PAUSA-S01.</p></div>${retry}`;
+};
+
+/* =====================================================================
+   Ofrecer un espacio (anfitriones)
+   ===================================================================== */
+const wzNew = () => ({step:1, kind:'Cafetería', name:'', about:'', addr:'', pos:null, open:'08:00', close:'21:00', zones:[], zd:null, zc:0, rules:[], custom:'', minc:'', maxDur:180, terms:false});
+const zdNew = () => ({name:'', kind:'estudio', modes:['ind'], cap:6, price:{ind:3, comp:2, grup:3}, am:{wifi:true, plug:true, table:true}, noise:2, ideal:''});
+const posTxt = () => wz.pos ? 'Ubicación marcada, a ' + distTxt(wz.pos) + ' de UTEC.' : 'Toca el mapa para marcar dónde está tu espacio.';
+
+function hostedCard(s){
+  const st = spaceNow(s);
+  return `<button class="scard ${s.paused ? 'off' : ''}" data-act="hosted" data-id="${s.id}">
+    <div class="top"><span class="tag">${esc(s.kind)}</span><span class="tag ${s.paused ? 'off' : 'ok'}">${s.paused ? 'Pausado' : 'Visible en el mapa'}</span></div>
+    <h3>${esc(s.name)}</h3>
+    <div class="meta"><span>${I('building')}${s.zones.length} ${s.zones.length === 1 ? 'zona' : 'zonas'}</span><span>${I('clock')}${hm(s.open)} a ${hm(s.close)}</span><span>${esc(st.txt)}</span></div></button>`;
+}
+views.ofrecer = () => {
+  const mine = db.mine;
+  return `<h1 class="title">Ofrece tu espacio libre a universitarios</h1>
+    <p class="lede">Una sala, una mesa en tu cafetería o un departamento con lugar en ciertos horarios. Pausa te conecta con estudiantes que buscan dónde estudiar cerca de su campus.</p>
+    ${mine.length ? `<h2 class="sec">Tus espacios</h2><div class="cards">${mine.map(hostedCard).join('')}</div>` : ''}
+    <button class="btn primary" data-act="wzstart">${I('plus')}${wz ? 'Continuar el registro' : 'Registrar un espacio'}</button>
+    <h2 class="sec">Tú pones las condiciones</h2>
+    <ul class="rules">
+      <li>${I('table')}<span>Defines tus zonas, cuántos puestos tiene cada una y cuánto cobras por hora.</span></li>
+      <li>${I('shield')}<span>Fijas tus reglas: silencio, consumo mínimo, solo con carnet universitario o el tiempo máximo por turno.</span></li>
+      <li>${I('qr')}<span>Tu local tiene un QR propio. Los estudiantes lo escanean al llegar y al salir, y tú ves cuándo ingresó cada uno.</span></li>
+      <li>${I('clock')}<span>Eliges tus horarios y puedes pausar el espacio cuando lo necesites.</span></li>
+    </ul>`;
+};
+function zoneForm(){
+  const d = wz.zd;
+  return `<div class="zone" style="margin-top:8px">
+    <h3>Nueva zona</h3>
+    <label class="field"><span>Nombre de la zona</span><input type="text" data-bind="zd.name" value="${esc(d.name)}" placeholder="Ej.: Mesas del fondo" maxlength="40"></label>
+    <div class="field"><span>Tipo de ambiente</span><div class="chips">${Object.entries(KINDS).map(([k, v]) => `<button class="chip" data-act="zkind" data-v="${k}" aria-pressed="${d.kind === k}">${I(v.i)}${v.l}</button>`).join('')}</div></div>
+    <div class="field"><span>Modalidades que aceptas</span><div class="chips">${Object.entries(MODES).map(([k, v]) => `<button class="chip" data-act="zmode" data-v="${k}" aria-pressed="${d.modes.includes(k)}">${I(v.i)}${v.l}</button>`).join('')}</div></div>
+    <div class="field"><span>Cantidad de puestos</span><div class="stepper"><button data-act="zcap" data-d="-1" aria-label="Menos puestos" ${d.cap <= 1 ? 'disabled' : ''}>${I('minus')}</button><output aria-live="polite">${d.cap}</output><button data-act="zcap" data-d="1" aria-label="Más puestos" ${d.cap >= 40 ? 'disabled' : ''}>${I('plus')}</button></div></div>
+    ${d.modes.map(m => `<label class="field"><span>Precio por persona por hora, ${MODES[m].l.toLowerCase()} (S/)</span><input type="number" inputmode="decimal" min="0" max="50" step="0.5" data-bind="zd.price.${m}" data-num="1" value="${d.price[m]}"></label>`).join('')}
+    <div class="field"><span>Servicios de la zona</span><div class="chips">${Object.entries(AM).map(([k, v]) => `<button class="chip" data-act="zam" data-v="${k}" aria-pressed="${!!d.am[k]}">${I(k)}${v.l}</button>`).join('')}</div></div>
+    <div class="field"><span>Nivel de ruido</span><div class="chips">${[1, 2, 3].map(n => `<button class="chip" data-act="znoise" data-v="${n}" aria-pressed="${d.noise === n}">${NOISE[n]}</button>`).join('')}</div></div>
+    <label class="field"><span>Ideal para (opcional)</span><input type="text" data-bind="zd.ideal" value="${esc(d.ideal)}" placeholder="Ej.: Repasar para un examen" maxlength="90"></label>
+    <div class="btn-row"><button class="btn line" data-act="zcancel">Cancelar</button><button class="btn primary" data-act="zsave">Guardar zona</button></div></div>`;
+}
+views.wizard = () => {
+  if (!wz) wz = wzNew();
+  const st = wz.step, titles = ['Tu espacio', 'Zonas y servicios', 'Reglas', 'Revisión'];
+  let body = '';
+  if (st === 1) body = `
+    <h2 class="sec" style="margin-top:14px">Tipo de espacio</h2>
+    <div class="chips" id="kindChips" role="group" aria-label="Tipo de espacio">${SPACE_KINDS.map(k => `<button class="chip" data-act="wzkind" data-v="${k}" aria-pressed="${wz.kind === k}">${k}</button>`).join('')}</div>
+    <label class="field"><span>Nombre del espacio</span><input type="text" data-bind="wz.name" value="${esc(wz.name)}" placeholder="Ej.: Sala de estudio Los Álamos" maxlength="50"></label>
+    <label class="field"><span>Descripción breve</span><textarea data-bind="wz.about" maxlength="160" placeholder="Qué ofreces y cómo es el ambiente">${esc(wz.about)}</textarea></label>
+    <label class="field"><span>Dirección o referencia</span><input type="text" data-bind="wz.addr" value="${esc(wz.addr)}" placeholder="Calle, cuadra y referencia" maxlength="80"></label>
+    <div class="field"><span>Ubicación en el mapa</span><div class="map small" id="pickMap" role="region" aria-label="Mapa para marcar la ubicación"></div><p class="small" id="posTxt" style="margin:6px 0 0">${posTxt()}</p></div>
+    <div class="row" style="gap:12px;align-items:flex-start"><label class="field" style="flex:1"><span>Abre a las</span><input type="time" data-bind="wz.open" value="${wz.open}"></label>
+      <label class="field" style="flex:1"><span>Cierra a las</span><input type="time" data-bind="wz.close" value="${wz.close}"></label></div>`;
+  if (st === 2) body = `
+    <h2 class="sec" style="margin-top:14px">Zonas de tu espacio</h2>
+    <p class="small" style="margin:-4px 0 10px">Una zona es un ambiente con sus propios servicios, como "Mesas del fondo" o "Rincón con puff".</p>
+    ${wz.zones.length ? `<ul class="zlist">${wz.zones.map((z, i) => `<li><div><b>${esc(z.name)}</b><small>${KINDS[z.kind].l}, ${z.cap} puestos, ${z.modes.map(m => MODES[m].l).join(' y ')}</small></div><button class="iconbtn" data-act="zdel" data-i="${i}" aria-label="Quitar la zona ${esc(z.name)}">${I('trash')}</button></li>`).join('')}</ul>` : ''}
+    ${wz.zd ? zoneForm() : `<button class="btn line" data-act="zadd">${I('plus')}Añadir ${wz.zones.length ? 'otra zona' : 'una zona'}</button>`}`;
+  if (st === 3) body = `
+    <h2 class="sec" style="margin-top:14px">Reglas de tu espacio</h2>
+    <p class="small" style="margin:-4px 0 10px">Los estudiantes las ven antes de reservar y las aceptan al reservar.</p>
+    <div class="chips">${RULE_PRESETS.map(r => `<button class="chip" data-act="wzrule" data-v="${esc(r)}" aria-pressed="${wz.rules.includes(r)}">${esc(r)}</button>`).join('')}</div>
+    <label class="field"><span>Consumo mínimo por turno, en soles (opcional)</span><input type="number" inputmode="decimal" min="0" step="1" data-bind="wz.minc" value="${esc(wz.minc)}" placeholder="Ej.: 6"></label>
+    <label class="field"><span>Tiempo máximo por turno</span><select data-bind="wz.maxDur">${[60, 90, 120, 150, 180, 240].map(d => `<option value="${d}" ${wz.maxDur === d ? 'selected' : ''}>${durTxt(d)}</option>`).join('')}</select></label>
+    <label class="field"><span>Otra regla (opcional)</span><input type="text" data-bind="wz.custom" value="${esc(wz.custom)}" placeholder="Ej.: No mover los muebles" maxlength="80"></label>`;
+  if (st === 4){
+    const rules = finalRules();
+    body = `<h2 class="sec" style="margin-top:14px">Revisa y publica</h2>
+      <article class="ficha"><div class="fh"><span>${esc(wz.kind)}</span><span>${hm(toMin(wz.open))} a ${hm(toMin(wz.close))}</span></div>
+        <h3>${esc(wz.name)}</h3><div class="small">${esc(wz.addr)}</div>
+        <div class="fr" style="margin-top:8px"><span>Zonas</span><span>${wz.zones.map(z => esc(z.name)).join(', ')}</span></div>
+        <div class="fr"><span>Puestos en total</span><span>${wz.zones.reduce((n, z) => n + z.cap, 0)}</span></div>
+        <div class="fr"><span>Turno máximo</span><span>${durTxt(wz.maxDur)}</span></div>
+        <div class="fr"><span>Reglas</span><span>${rules.length ? rules.map(esc).join('; ') : 'Ninguna'}</span></div></article>
+      <p class="small">Tu espacio aparecerá en el mapa con la marca "Verificación pendiente". En la versión real, el equipo de Pausa revisará tu local antes de darte la insignia de verificado.</p>
+      <button class="switch" data-act="wzterms" aria-pressed="${wz.terms}"><span><b>Acepto las condiciones de Pausa</b><br><small>Me comprometo a respetar los horarios y reglas que publiqué.</small></span><span class="tg"></span></button>`;
+  }
+  return `<button class="back" data-act="back">${I('chevL')}Salir (se guarda tu avance)</button>
+    <h1 class="title">Registrar mi espacio</h1>
+    <div class="progress" aria-hidden="true">${[1, 2, 3, 4].map(n => `<i class="${n <= st ? 'on' : ''}"></i>`).join('')}</div>
+    <p class="small" style="margin:4px 0 0">Paso ${st} de 4: ${titles[st - 1]}</p>
+    ${body}
+    <div class="cta-bar"><div class="in">
+      ${st > 1 ? `<button class="btn line" data-act="wzprev" style="flex:0 0 auto;width:auto">${I('chevL')}Atrás</button>` : ''}
+      <button class="btn ${st === 4 ? 'mark' : 'primary'}" data-act="wznext">${st === 4 ? 'Publicar mi espacio' : 'Continuar'}</button></div></div>`;
+};
+let wzMap = null;
+after.wizard = () => {
+  if (wz && wz.step === 1 && $('#pickMap')){
+    wzMap = createMap($('#pickMap'), {pins:[], pick:wz.pos, remember:false, onTap:p => { wz.pos = p; wzMap.setPick(p); const t = $('#posTxt'); if (t) t.textContent = posTxt(); }});
+  }
+  return () => { if (wzMap){ wzMap.destroy(); wzMap = null; } };
+};
+function finalRules(){
+  const r = wz.rules.slice();
+  if (String(wz.minc).trim() && +wz.minc > 0) r.push('Consumo mínimo de S/ ' + (+wz.minc) + ' por turno');
+  if (wz.custom.trim()) r.push(wz.custom.trim());
+  r.push('Máximo ' + durTxt(wz.maxDur) + ' por turno');
+  return r;
+}
+function wzValidate(){
+  if (wz.step === 1){
+    if (wz.name.trim().length < 3) return 'Escribe el nombre de tu espacio.';
+    if (wz.addr.trim().length < 3) return 'Escribe la dirección o una referencia.';
+    if (!wz.pos) return 'Toca el mapa para marcar la ubicación de tu espacio.';
+    if (!(toMin(wz.open) < toMin(wz.close))) return 'La hora de cierre debe ser posterior a la de apertura.';
+  }
+  if (wz.step === 2){
+    if (wz.zd) return 'Guarda o cancela la zona que estás editando.';
+    if (!wz.zones.length) return 'Añade al menos una zona.';
+  }
+  if (wz.step === 4 && !wz.terms) return 'Acepta las condiciones para publicar.';
+  return '';
+}
+function publish(){
+  const id = 'h' + Date.now().toString(36);
+  const sp = {id, name:wz.name.trim(), kind:wz.kind, addr:wz.addr.trim(), lat:wz.pos.lat, lng:wz.pos.lng, open:toMin(wz.open), close:toMin(wz.close), verified:false,
+    host:db.user.name || 'Tú', maxDur:wz.maxDur, about:wz.about.trim(), rules:finalRules(), paused:false, own:true,
+    zones:wz.zones.map(z => ({...z, sid:id}))};
+  db.mine = db.mine.concat([sp]); wz = null;
+  goBase('hosted', {sid:id, fresh:true});
+}
+views.hosted = ({sid, fresh}) => {
+  const s = db.mine.find(x => x.id === sid); if (!s) return notFound();
+  const logs = db.log.filter(l => l.sid === sid).sort((a, b) => b.t - a.t), today = dkey(now());
+  const insToday = logs.filter(l => l.type === 'in' && dkey(new Date(l.t)) === today).length;
+  const rs = syncRes().filter(r => r.sid === sid && r.status !== 'cancelled');
+  const m = minsOf(now());
+  return `<button class="back" data-act="back">${I('chevL')}Volver</button>
+    ${fresh ? `<div class="result"><div class="big ok">${I('check')}</div><h1 class="title">Tu espacio ya está en el mapa</h1><p class="lede" style="margin:0 auto 14px">Imprime el QR del local y pégalo en la entrada. Los estudiantes lo escanean al llegar y al salir.</p></div>` : `<h1 class="title">${esc(s.name)}</h1>`}
+    <div class="row" style="flex-wrap:wrap"><span class="tag">${esc(s.kind)}</span><span class="tag pend">${I('info')}Verificación pendiente</span></div>
+    <div class="stats"><div class="stat"><b>${insToday}</b><span>ingresos hoy</span></div><div class="stat"><b>${rs.length}</b><span>reservas recibidas</span></div><div class="stat"><b>${money(rs.reduce((n, r) => n + r.total, 0))}</b><span>ingresos de ejemplo</span></div></div>
+    <button class="btn mark" data-act="qr" data-id="${s.id}">${I('qr')}Ver el QR del local</button>
+    <div class="sp"></div>
+    <button class="switch" data-act="pause" data-id="${s.id}" aria-pressed="${!s.paused}"><span><b>Visible para estudiantes</b><br><small>Si lo pausas, aparece como cerrado en el mapa.</small></span><span class="tg"></span></button>
+    <h2 class="sec">Tus zonas</h2>
+    <ul class="zlist">${s.zones.map(z => { const free = (!s.paused && m >= s.open && m < s.close) ? zoneFree(s, z, today, m, 30) : null;
+      return `<li><div><b>${esc(z.name)}</b><small>${KINDS[z.kind].l}, ${z.modes.map(k => MODES[k].l + ' ' + money(z.price[k])).join(' / ')}</small></div><span class="tag ${free ? 'ok' : 'off'}">${free == null ? 'Cerrado' : free + ' de ' + z.cap}</span></li>`; }).join('')}</ul>
+    <h2 class="sec">Actividad reciente</h2>
+    ${logs.length ? `<ul class="rules">${logs.slice(0, 6).map(l => { const r = db.res.find(x => x.id === l.rid); return `<li>${I(l.type === 'in' ? 'login' : 'logout')}<span>${l.type === 'in' ? 'Ingreso' : 'Salida'} a las ${hmTs(l.t)}${r ? ' (reserva ' + esc(r.code) + ')' : ''}</span></li>`; }).join('')}</ul>`
+      : `<div class="empty">${I('qr')}<p>Cuando un estudiante escanee tu QR, verás aquí su ingreso y su salida.</p></div>`}
+    <button class="btn line" data-act="open" data-id="${s.id}">Ver cómo lo ven los estudiantes</button>
+    <button class="btn danger" data-act="delspace" data-id="${s.id}">${I('trash')}Eliminar este espacio</button>`;
+};
+views.localqr = ({sid}) => {
+  const s = spaceById(sid); if (!s) return notFound();
+  return `<button class="back" data-act="back">${I('chevL')}Volver</button>
+    <h1 class="title">QR del local</h1>
+    <p class="lede">Imprímelo y pégalo en la entrada de ${esc(s.name)}. Cada estudiante lo escanea con Pausa al llegar y al salir.</p>
+    <div class="qrcard printable"><h3>${esc(s.name)}</h3><canvas id="qrc" aria-label="Código QR de ${esc(s.name)}"></canvas>
+      <div class="code">${localCode(s)}</div><p>Escanea con la app Pausa al llegar y al salir.</p></div>
+    <button class="btn primary" data-act="printqr">${I('print_')}Imprimir</button>
+    <button class="btn line" data-act="dlqr" data-id="${s.id}">${I('download')}Descargar imagen</button>`;
+};
+after.localqr = ({sid}) => { QR.draw($('#qrc'), 'PAUSA:LOCAL:' + sid, 10); };
+
+/* =====================================================================
+   Perfil
+   ===================================================================== */
+let clockSel = 'real';
+function refreshCampus(){ $('#campus').innerHTML = I('pin') + (clockOffset === 0 ? 'UTEC, Barranco' : 'Hora simulada ' + hm(minsOf(now()))); }
+views.perfil = () => {
+  const u = db.user, done = db.res.filter(r => r.status === 'done' && r.inAt && r.outAt);
+  const mins = done.reduce((n, r) => n + Math.max(1, Math.round((r.outAt - r.inAt) / 60000)), 0);
+  return `<h1 class="title">Tu perfil</h1>
+    <label class="field"><span>Tu nombre</span><input type="text" data-bind="user.name" value="${esc(u.name)}" placeholder="Nombre y apellido" autocomplete="name"></label>
+    <p class="small" style="margin:8px 0 0">Campus: UTEC, Barranco, Lima.</p>
+    <h2 class="sec">Tu tiempo de estudio</h2>
+    <div class="stats"><div class="stat"><b>${(mins / 60).toFixed(1).replace('.0', '')}</b><span>horas en Pausa</span></div><div class="stat"><b>${done.length}</b><span>reservas completadas</span></div><div class="stat"><b>${new Set(done.map(r => r.sid)).size}</b><span>espacios distintos</span></div></div>
+    <h2 class="sec">Cómo funciona</h2>
+    <ol class="steps">
+      <li><span><b>Elige</b>Busca en el mapa un espacio libre cerca de UTEC.</span></li>
+      <li><span><b>Reserva</b>Escoge zona, modalidad (individual, compartida o grupal), día y hora.</span></li>
+      <li><span><b>Escanea al llegar</b>El QR del local sella tu ingreso.</span></li>
+      <li><span><b>Escanea al salir</b>Se registra tu salida y el tiempo real que usaste.</span></li>
+    </ol>
+    <h2 class="sec">Modo demostración</h2>
+    <p class="small" style="margin:-4px 0 10px">Simula la hora del día para ver cómo cambian los cupos y probar el escaneo.</p>
+    <div class="chips" role="group" aria-label="Hora simulada">${['real', '09:30', '12:30', '15:00', '18:30', '21:30'].map(v => `<button class="chip" data-act="clock" data-v="${v}" aria-pressed="${clockSel === v}">${v === 'real' ? 'Hora real' : v}</button>`).join('')}</div>
+    <button class="btn line" data-act="skip">${I('clock')}Avanzar el reloj 30 minutos</button>
+    <button class="btn danger" data-act="reset">Borrar mis datos de prueba</button>
+    <p class="note">Prototipo de prueba de Pausa para UTEC. Los espacios, precios y pagos son simulados.</p>`;
+};
+
+/* =====================================================================
+   Acciones (delegación de eventos)
+   ===================================================================== */
+function setPath(path, val){
+  const p = path.split('.');
+  if (p[0] === 'user'){ const u = db.user; u.name = val; db.user = u; return; }
+  const roots = {wz:() => wz, zd:() => wz && wz.zd, pay:() => payDraft, ui:() => ui};
+  let o = roots[p[0]](); if (!o) return;
+  for (let i = 1; i < p.length - 1; i++) o = o[p[i]];
+  o[p[p.length - 1]] = path === 'wz.maxDur' ? +val : val;
+  if (path === 'ui.sort') exPaint();
+}
+const pressWithin = (el, v) => { $$('[data-v]', el.parentElement).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v))); };
+Object.assign(A, {
+  tab:d => tab(d.to), back:() => back(), closesheet:() => closeSheet(),
+  ask:d => { const r = askRes; askRes = null; $('#layer').innerHTML = ''; if (r) r(d.v === '1'); },
+  open:d => go('space', {sid:d.id}),
+  view:d => { ui.view = d.v; exPaint(); },
+  mode:d => { ui.mode = d.v; exPaint(); },
+  filter:d => {
+    const f = d.f;
+    if (f === 'now') ui.now = !ui.now;
+    else { const k = f.slice(2), list = f.startsWith('k:') ? ui.kinds : ui.ams, i = list.indexOf(k); if (i >= 0) list.splice(i, 1); else list.push(k); }
+    exPaint();
+  },
+  clearf:() => { ui.mode = 'all'; ui.now = false; ui.kinds = []; ui.ams = []; exPaint(); },
+  book:d => { bkInit(d.sid, d.zid); go('book', {sid:d.sid, zid:d.zid}); },
+  bmode:d => { bk.mode = d.v; const z = zoneOf(spaceById(bk.sid), bk.zid); bk.people = Math.min(bk.people, Math.min(8, z.cap)); bk.start = null; redraw(); },
+  people:d => { bk.people += +d.d; bk.start = null; redraw(); },
+  date:d => { bk.date = d.v; bk.start = null; redraw(); },
+  dur:d => { bk.dur = +d.v; redraw(); },
+  start:d => { bk.start = +d.v; redraw(); },
+  openpay:() => openPay(),
+  method:(d, el) => { payDraft.method = d.v; pressWithin(el, d.v); },
+  paynow:() => payNow(),
+  res:d => go('res', {rid:d.id}),
+  restab:d => { resTab = d.v; redraw(); },
+  cancelres:async d => {
+    const r = db.res.find(x => x.id === d.id); if (!r) return;
+    const refund = rStart(r) - now().getTime() >= 30 * 60000;
+    const ok = await ask('¿Cancelar esta reserva?', refund ? 'Te devolvemos el 100 % porque faltan más de 30 minutos.' : 'Faltan menos de 30 minutos, así que no hay reembolso.', 'Sí, cancelar', true);
+    if (!ok) return;
+    const all = db.res; all.find(x => x.id === d.id).status = 'cancelled'; db.res = all;
+    toast('Reserva cancelada.'); tab('reservas');
+  },
+  extend:d => {
+    const all = db.res, r = all.find(x => x.id === d.id), s = spaceById(r.sid), z = zoneOf(s, r.zid), end = r.start + r.dur;
+    if (r.dur + 30 > s.maxDur) return toast('Este espacio permite hasta ' + durTxt(s.maxDur) + ' por turno.');
+    if (end + 30 > s.close) return toast('El espacio cierra a las ' + hm(s.close) + '.');
+    if (zoneFree(s, z, r.date, end, 30) < r.people) return toast('No hay cupo para extender 30 minutos.');
+    r.dur += 30; r.total += z.price[r.mode] * r.people * .5; db.res = all;
+    toast('Extendiste 30 min. Nueva salida: ' + hm(r.start + r.dur) + '.'); redraw();
+  },
+  invite:async d => {
+    const r = db.res.find(x => x.id === d.id), txt = `Reservé ${r.zname} en ${r.sname} (${dayLabel(r.date)} a las ${hm(r.start)}). Nos vemos allá. Código ${r.code}.`;
+    try{ if (navigator.share){ await navigator.share({title:'Estudiemos en Pausa', text:txt}); return; } await navigator.clipboard.writeText(txt); toast('Mensaje copiado. Pégalo en tu grupo.'); }
+    catch(e){ toast('No se pudo compartir. Copia este texto: ' + txt); }
+  },
+  rate:(d, el) => { const all = db.res; all.find(x => x.id === d.id).rating = +d.n; db.res = all; $$('button', el.parentElement).forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.n <= +d.n))); toast('Gracias por tu calificación.'); },
+  cam:() => startCam(),
+  manual:() => { const v = ($('#manual') || {}).value || ''; if (!v.trim()) return toast('Escribe el código del local.'); finishScan(v); },
+  sim:() => finishScan('PAUSA:LOCAL:' + $('#simSel').value),
+  showqr:() => go('localqr', {sid:$('#simSel').value}),
+  /* anfitrión */
+  wzstart:() => { if (!wz) wz = wzNew(); go('wizard'); },
+  wzkind:(d, el) => { wz.kind = d.v; pressWithin(el, d.v); },
+  wzrule:(d, el) => { const i = wz.rules.indexOf(d.v); if (i >= 0) wz.rules.splice(i, 1); else wz.rules.push(d.v); el.setAttribute('aria-pressed', String(i < 0)); },
+  wzterms:(d, el) => { wz.terms = !wz.terms; el.setAttribute('aria-pressed', String(wz.terms)); },
+  wznext:() => { const e = wzValidate(); if (e) return toast(e); if (wz.step === 4) return publish(); wz.step++; draw(); window.scrollTo(0, 0); },
+  wzprev:() => { wz.step--; draw(); window.scrollTo(0, 0); },
+  zadd:() => { wz.zd = zdNew(); redraw(); },
+  zcancel:() => { wz.zd = null; redraw(); },
+  zdel:d => { wz.zones.splice(+d.i, 1); redraw(); },
+  zkind:d => { wz.zd.kind = d.v; redraw(); },
+  zmode:d => { const m = wz.zd.modes, i = m.indexOf(d.v); if (i >= 0){ if (m.length === 1) return toast('Elige al menos una modalidad.'); m.splice(i, 1); } else m.push(d.v); redraw(); },
+  zam:d => { const a = wz.zd.am; if (a[d.v]) delete a[d.v]; else a[d.v] = true; redraw(); },
+  znoise:d => { wz.zd.noise = +d.v; redraw(); },
+  zcap:d => { wz.zd.cap = Math.max(1, Math.min(40, wz.zd.cap + +d.d)); redraw(); },
+  zsave:() => {
+    const d = wz.zd; if (d.name.trim().length < 2) return toast('Ponle un nombre a la zona.');
+    const price = {}; for (const m of d.modes){ const p = parseFloat(d.price[m]); if (!(p >= 0)) return toast('Revisa el precio de la modalidad ' + MODES[m].l.toLowerCase() + '.'); price[m] = p; }
+    const am = {}; Object.keys(d.am).forEach(k => { am[k] = ''; });
+    wz.zc++; wz.zones.push({id:'z' + wz.zc, name:d.name.trim(), kind:d.kind, cap:d.cap, modes:d.modes.slice(), price, noise:d.noise, ideal:d.ideal.trim(), am});
+    wz.zd = null; redraw(); toast('Zona guardada.');
+  },
+  hosted:d => go('hosted', {sid:d.id}),
+  pause:(d, el) => { const all = db.mine, s = all.find(x => x.id === d.id); s.paused = !s.paused; db.mine = all; el.setAttribute('aria-pressed', String(!s.paused)); toast(s.paused ? 'Espacio pausado.' : 'Tu espacio vuelve a estar visible.'); },
+  delspace:async d => {
+    if (!await ask('¿Eliminar este espacio?', 'Dejará de aparecer en el mapa. Las reservas existentes no se borran.', 'Eliminar', true)) return;
+    db.mine = db.mine.filter(x => x.id !== d.id); toast('Espacio eliminado.'); tab('ofrecer');
+  },
+  qr:d => go('localqr', {sid:d.id}),
+  printqr:() => window.print(),
+  dlqr:d => { $('#qrc').toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'pausa-' + localCode(spaceById(d.id)).toLowerCase() + '.png'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); }); },
+  /* perfil */
+  clock:(d, el) => {
+    clockSel = d.v;
+    if (d.v === 'real') clockOffset = 0;
+    else { const t = new Date(), [h, m] = d.v.split(':').map(Number); clockOffset = new Date(t.getFullYear(), t.getMonth(), t.getDate(), h, m).getTime() - Date.now(); }
+    pressWithin(el, d.v); refreshCampus(); toast(d.v === 'real' ? 'Usando la hora real.' : 'Hora simulada: ' + d.v);
+  },
+  skip:() => { clockOffset += 30 * 60000; clockSel = 'custom'; $$('[data-act="clock"]').forEach(b => b.setAttribute('aria-pressed', 'false')); refreshCampus(); toast('Ahora son las ' + hm(minsOf(now())) + ' (hora simulada).'); },
+  reset:async () => {
+    if (!await ask('¿Borrar tus datos de prueba?', 'Se eliminan tus reservas, tus espacios registrados y tu nombre en este navegador.', 'Borrar todo', true)) return;
+    store.clear(); bk = null; wz = null; payDraft = {name:'', method:'Yape'}; clockOffset = 0; clockSel = 'real'; ui.sel = null; refreshCampus(); tab('explorar'); toast('Datos borrados.');
+  }
+});
+document.addEventListener('click', e => {
+  if (e.target.classList && e.target.classList.contains('scrim')){ closeSheet(); return; }
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const fn = A[el.dataset.act]; if (fn) fn(el.dataset, el);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('#layer').firstChild) closeSheet(); });
+function onBind(e){ const el = e.target.closest && e.target.closest('[data-bind]'); if (!el) return; setPath(el.dataset.bind, el.dataset.num ? parseFloat(el.value) : el.value); }
+document.addEventListener('input', onBind); document.addEventListener('change', onBind);
+
+/* ---------- arranque ---------- */
+refreshCampus();
+loadLeaflet();
+tab('explorar');
+</script>
+</body>
+</html>
